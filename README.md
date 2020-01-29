@@ -1,2 +1,2 @@
-# dino-sauce
-Bad dinosaur puns!
+# angry dinosauce
+The absolute worst dinosaur puns!
