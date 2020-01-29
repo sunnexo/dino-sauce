@@ -31,8 +31,11 @@ class Dino{
 
   render(){
     fill(200, 100, 0);
-    image(iPlayerStand, this.x, this.y, this.dx, this.dy)
-    // rect(this.x, this.y, this.dx, this.dy);
+    if(this.isJumping === 0){
+      image(iPlayerStand, this.x, this.y, this.dx, this.dy)
+    }else{
+      image(iPlayerJump, this.x, this.y, this.dx, this.dy)
+    }
   }
 
   jump(){

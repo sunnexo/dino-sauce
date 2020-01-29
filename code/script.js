@@ -9,6 +9,7 @@ function preload(){
   sDamage = loadSound('audio/damage.mp3')
   iGameover = loadImage('graphic/gameover.png');
   iPlayerStand = loadImage('graphic/stand.png');
+  iPlayerJump = loadImage('graphic/jump.png');
   iEnemy2 = loadImage('graphic/enemy2.png');
   iEnemy3 = loadImage('graphic/enemy3.png');
   iEnemy4 = loadImage('graphic/enemy4.png');
@@ -37,6 +38,7 @@ function draw() {
     push()
     fill(255)
     textSize(30);
+
     text("Score: "+round(dino.score), 40, 40)
     pop()
     dino.render();
@@ -44,16 +46,17 @@ function draw() {
       cactus = cactuses[i]
       cactus.render();
     }
-    dino.update();
     for(var i = 0; i < cactuses.length; i++){
       cactus = cactuses[i]
       cactus.move();
       cactus.collision(dino);
     }
+    dino.update();
   }
 }
 
 function keyPressed(){
+  dino.score = round(dino.score)
   if(key == " "){
     dino.jump();
   }
