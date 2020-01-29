@@ -172,7 +172,4 @@ class NeuralNetwork {
     this.bias_h.map(func);
     this.bias_o.map(func);
   }
-
-
-
 }

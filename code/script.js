@@ -1,19 +1,20 @@
 let dino;
 let cactuses = [];
+let highScore = 0;
 
 function preload(){
   song = loadSound('audio/megaman-music.mp3');
   sJump = loadSound('audio/jump.mp3')
   sLand = loadSound('audio/land.mp3')
   sDamage = loadSound('audio/damage.mp3')
-
+  iGameover = loadImage('graphic/gameover.png');
 }
 
 function setup() {
   song.play();
   song.setLoop(true);
-  song.setVolume(0.3);
-  createCanvas(1500,500);
+  song.setVolume(0.4);
+  createCanvas(1200, 500);
   reset();
 }
 
@@ -49,10 +50,10 @@ function draw() {
 }
 
 function keyPressed(){
-  if(key = " "){
+  if(key == " "){
     dino.jump();
   }
-  if(key = " " && !dino.run){
+  if(key == " " && !dino.run){
     console.log("test")
     reset()
   }
