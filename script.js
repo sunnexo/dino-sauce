@@ -1,5 +1,5 @@
 let dino;
-let cactus[];
+let cactus = [];
 
 
 function setup() {
