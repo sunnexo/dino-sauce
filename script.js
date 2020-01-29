@@ -3,12 +3,13 @@ let cactus = [];
 
 
 function setup() {
-  createCanvas(600,600);
-  dino = new Dino();
+  createCanvas(1500,500);
+  dino = new Dino(NaN);
 }
 
 
 function draw() {
+  background(0)
   dino.update();
   dino.render();
 }

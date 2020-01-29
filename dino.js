@@ -1,32 +1,36 @@
 
 class Dino{
-  constructor(){
-    this.ground = 500 - 30
-    this.dx = 20;
-    this.dy = 30;
+  constructor(test){
+    this.ground = height
+    this.dx = 40;
+    this.dy = 50;
     this.x = 30;
-    this.y = height-40;
-    this.yVel = 0;
-    this.grav = 0.4;
+    this.y = height - 190;
+    this.yVell = 0;
+    this.grav = -0.4;
   }
 
   update(){
-    if(this.yVel <= 0 && this.y > this.ground){
+    if(this.y >= this.ground){
+      this.y = this.ground;
+    }
+    if(this.yVell >= 0 && this.y >= this.ground){
       this.yVell = 0;
     }else{
-      this.yVell -= this.grav;
+      this.yVell = this.yVell - this.grav;
     }
-    this.y += this.yVel;
+    this.y += this.yVell;
   }
 
   render(){
+    console.log(this.y, this.yVell)
     fill(200, 100, 0);
-    rect(this.x, this.y, this.dx, this.dy);
+    rect(this.x, this.y, this.dx, -this.dy);
   }
 
   jump(){
     if(this.y >= this.ground){
-      this.yVel = 9;
+      this.yVell = -12;
     }
   }
 
