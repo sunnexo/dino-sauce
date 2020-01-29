@@ -19,7 +19,8 @@ function setup() {
   song.play();
   song.setLoop(true);
   song.setVolume(0.4);
-  createCanvas(1200, 500);
+  createCanvas(displayWidth, displayHeight);
+  // createCanvas(1200, 500);
   reset();
 }
 
@@ -27,9 +28,9 @@ function reset(){
   dino = new Dino();
   cactuses = [];
   cactuses.push(new Cactus(width+0));
-  cactuses.push(new Cactus(width+500));
-  cactuses.push(new Cactus(width+1000));
-  cactuses.push(new Cactus(width+1500));
+  cactuses.push(new Cactus(width+(width/4)*1));
+  cactuses.push(new Cactus(width+(width/4)*3));
+  cactuses.push(new Cactus(width*2));
 }
 
 function draw() {

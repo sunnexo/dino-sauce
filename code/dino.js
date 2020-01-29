@@ -5,8 +5,10 @@ class Dino{
     this.isJumping = 0;
     this.score = 0;
     this.ground = height;
-    this.dx = 80*1.1;
-    this.dy = -100*1.1;
+    this.dx = width*0.0733333
+    this.dy = height*-0.22
+    // this.dx = 80*1.1;
+    // this.dy = -100*1.1;
     this.x = 100;
     this.y = this.ground;
     this.yVell = 0;
