@@ -20,8 +20,12 @@ class Cactus{
 
     collision(dino){
       if(dino.x < this.xPos && dino.x + dino.dx > this.xPos){
-        if(dino.y < this.yPos + 100 && dino.y - dino.dy > this.yPos){
-          noLoop()
+        dino.score++;
+        if(dino.y < this.yPos - this.dy && dino.y - dino.dy > this.yPos){
+          fill(255, 0, 0)
+          textSize(52);
+          text("GAME OVER", width/2, height/2)
+          dino.run = false;
         }
       }
     }

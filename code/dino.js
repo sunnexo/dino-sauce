@@ -1,6 +1,8 @@
 
 class Dino{
-  constructor(test){
+  constructor(){
+    this.run = true;
+    this.score = 0;
     this.ground = height;
     this.dx = 80;
     this.dy = -100;
@@ -31,6 +33,17 @@ class Dino{
     if(this.y >= this.ground){
       this.yVell = -30;
     }
+  }
+
+  reset(){
+    this.score = 0;
+    this.ground = height;
+    this.dx = 80;
+    this.dy = -100;
+    this.x = 30;
+    this.y = this.ground;
+    this.yVell = 0;
+    this.grav = -1.7;
   }
 
 }
