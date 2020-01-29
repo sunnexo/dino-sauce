@@ -8,6 +8,10 @@ function preload(){
   sLand = loadSound('audio/land.mp3')
   sDamage = loadSound('audio/damage.mp3')
   iGameover = loadImage('graphic/gameover.png');
+  iPlayerStand = loadImage('graphic/stand.png');
+  iEnemy2 = loadImage('graphic/enemy2.png');
+  iEnemy3 = loadImage('graphic/enemy3.png');
+  iEnemy4 = loadImage('graphic/enemy4.png');
 }
 
 function setup() {
@@ -29,7 +33,7 @@ function reset(){
 
 function draw() {
   if(dino.run){
-    background(0);
+    background(200);
     push()
     fill(255)
     textSize(30);

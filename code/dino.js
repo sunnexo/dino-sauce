@@ -5,8 +5,8 @@ class Dino{
     this.isJumping = 0;
     this.score = 0;
     this.ground = height;
-    this.dx = 40;
-    this.dy = -100;
+    this.dx = 80*1.1;
+    this.dy = -100*1.1;
     this.x = 100;
     this.y = this.ground;
     this.yVell = 0;
@@ -31,17 +31,14 @@ class Dino{
 
   render(){
     fill(200, 100, 0);
-    rect(this.x, this.y, this.dx, this.dy);
+    image(iPlayerStand, this.x, this.y, this.dx, this.dy)
+    // rect(this.x, this.y, this.dx, this.dy);
   }
 
   jump(){
     if(this.y >= this.ground || this.isJumping < 2){
       this.isJumping++;
-      if(this.isJumping == 1){
-        this.yVell = -30;
-      }else{
-        this.yVell -= 22;
-      }
+      this.yVell = -34
       sJump.play();
     }
   }
