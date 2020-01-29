@@ -2,10 +2,10 @@ class Cactus{
     constructor(x){
         this.xPos = x;
         this.yPos = height;
-        this.dy = random(-150, -50)
+        this.dy = random(-200, -50)
     }
     move(){
-        if (this.xPos > -200){
+        if (this.xPos > -400){
             this.xPos = this.xPos - 10;
         }
         else{
@@ -20,11 +20,12 @@ class Cactus{
 
     collision(dino){
       if(dino.x < this.xPos && dino.x + dino.dx > this.xPos){
-        dino.score++;
+        dino.score += 0.14285714285714285714285714285714;
         if(dino.y < this.yPos - this.dy && dino.y - dino.dy > this.yPos){
           fill(255, 0, 0)
           textSize(52);
           text("GAME OVER", width/2, height/2)
+          sDamage.play();
           dino.run = false;
         }
       }
