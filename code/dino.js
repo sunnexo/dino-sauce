@@ -2,12 +2,12 @@
 class Dino{
   constructor(test){
     this.ground = height;
-    this.dx = 40;
-    this.dy = 50;
+    this.dx = 80;
+    this.dy = -100;
     this.x = 30;
-    this.y = height - 190;
+    this.y = this.ground;
     this.yVell = 0;
-    this.grav = -0.4;
+    this.grav = -1.7;
   }
 
   update(){
@@ -23,14 +23,13 @@ class Dino{
   }
 
   render(){
-    console.log(this.y, this.yVell)
     fill(200, 100, 0);
-    rect(this.x, this.y, this.dx, -this.dy);
+    rect(this.x, this.y, this.dx, this.dy);
   }
 
   jump(){
     if(this.y >= this.ground){
-      this.yVell = -12;
+      this.yVell = -30;
     }
   }
 
