@@ -20,7 +20,8 @@ function setup() {
   song.play();
   song.setLoop(true);
   song.setVolume(0.4);
-  createCanvas(displayWidth-20, displayHeight-200);
+  // createCanvas(displayWidth-20, displayHeight-200);
+  createCanvas(1500, 600);
   reset();
 }
 
