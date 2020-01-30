@@ -2,15 +2,27 @@
 
 class Menu{
   constructor(){
-    
+    this.return = false;
   }
 
-  run(){
-    return key==" ";
+  update(){
+
+  }
+
+  changeGameState(){
+    return this.return;
   }
 
   render(){
     background(100, 0, 0);
+  }
+
+  keyHandeler(key){
+    if(key==" "){
+      this.return = new User();
+    }else{
+      this.return = false;
+    }
   }
 }
 

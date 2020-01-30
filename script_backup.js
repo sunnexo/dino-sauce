@@ -18,56 +18,28 @@ function preload(){
 
 function setup() {
   song.play();
-  song.loop(true);
+  song.setLoop(true);
   song.setVolume(0.4);
-  createCanvas(displayWidth-20, displayHeight-200);
-  // createCanvas(1200, 500);
+  // createCanvas(displayWidth-20, displayHeight-200);
+  createCanvas(1500, 600);
   reset();
 }
 
 function reset(){
   game = new Game(true);
-  // dino = new Dino();
-  // cactuses = [];
-  // cactuses.push(new Cactus(width+0));
-  // cactuses.push(new Cactus(width+(width/4)*1));
-  // cactuses.push(new Cactus(width+(width/4)*3));
-  // cactuses.push(new Cactus(width*2));
-
 }
 
 function draw() {
+  this.keyPressed()
   if(!game.isDeath()){
     game.update()
   }
-  // if(dino.run){
-  //   background(200);
-  //   push()
-  //   fill(255)
-  //   textSize(30);
-  //
-  //   text("Score: "+round(dino.score), 40, 40)
-  //   pop()
-  //   dino.render();
-  //   for(var i = 0; i < cactuses.length; i++){
-  //     cactus = cactuses[i]
-  //     cactus.render();
-  //   }
-  //   for(var i = 0; i < cactuses.length; i++){
-  //     cactus = cactuses[i]
-  //     cactus.move();
-  //     cactus.collision(dino);
-  //   }
-  //   dino.update();
-  // }
 }
 
 function keyPressed(){
-  // dino.score = round(dino.score)
   console.log(game.dino.score)
   game.dino.score = round(game.dino.score)
   if(key == " "){
-    // dino.jump();
     game.jump();
   }
   if(key == " " && game.isDeath()){

@@ -17,26 +17,18 @@ function setup() {
   song.play();
   song.loop(true);
   song.setVolume(0.4);
-  createCanvas(displayWidth-20, displayHeight-200);
+  createCanvas(1500, 600);
 }
 
-function reset(){
-  game = new Game(true);
-}
 
 function draw() {
-  if(!game.isDeath()){
-    game.update()
+  gameState.update();
+  gameState.render();
+  if(gameState.changeGameState() != false){
+    gameState = gameState.changeGameState();
   }
 }
 
 function keyPressed(){
-  game.dino.score = round(game.dino.score)
-  if(key == " "){
-    game.jump();
-  }
-  if(key == " " && game.isDeath()){
-    console.log(game.getInputs())
-    reset()
-  }
+  gameState.keyHandeler(key);
 }

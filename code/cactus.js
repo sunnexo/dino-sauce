@@ -38,12 +38,13 @@ class Cactus{
     }
 
     collision(dino){
+      // console.log(dino);
       this.speed = dino.score/10 + width*0.0083333333
       if(this.x > dino.x - dino.dx && this.x - this.dx < dino.x){
         dino.score += 0.08333333333333333333333333333333;
         if(this.y > dino.y + dino.dy && this.y + this.dy < dino.y){
-          if(round(dino.score) > highScore){
-            highScore = round(dino.score);
+          if(round(dino.score) > gameState.game.dino.highScore){
+            gameState.game.dino.highScore = round(dino.score);
           }
           fill(255, 0, 0);
           textSize(52);
@@ -54,7 +55,7 @@ class Cactus{
           textSize(40);
           fill(255);
           text("score: "+round(dino.score), 100, height/2-25)
-          text("high score: "+highScore, 100, height/2+25)
+          text("high score: "+gameState.game.dino.highScore, 100, height/2+25)
           pop()
           if(!sDamage.isPlaying()){
             sDamage.play();

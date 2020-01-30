@@ -1,48 +1,38 @@
-let dino;
-let cactuses = [];
-let highScore = 0;
-let game;
 
-function preload(){
-  song = loadSound('audio/megaman-music.mp3');
-  sJump = loadSound('audio/jump.mp3')
-  sLand = loadSound('audio/land.mp3')
-  sDamage = loadSound('audio/damage.mp3')
-  iGameover = loadImage('graphic/gameover.png');
-  iPlayerStand = loadImage('graphic/stand.png');
-  iPlayerJump = loadImage('graphic/jump.png');
-  iEnemy2 = loadImage('graphic/enemy2.png');
-  iEnemy3 = loadImage('graphic/enemy3.png');
-  iEnemy4 = loadImage('graphic/enemy4.png');
-}
 
-function setup() {
-  song.play();
-  song.setLoop(true);
-  song.setVolume(0.4);
-  // createCanvas(displayWidth-20, displayHeight-200);
-  createCanvas(1500, 600);
-  reset();
-}
-
-function reset(){
-  game = new Game(true);
-}
-
-function draw() {
-  if(!game.isDeath()){
-    game.update()
+class User{
+  constructor(){
+    this.dino;
+    this.cactuses = [];
+    this.highScore = 0;
+    this.game;
+    this.reset();
   }
-}
-
-function keyPressed(){
-  console.log(game.dino.score)
-  game.dino.score = round(game.dino.score)
-  if(key == " "){
-    game.jump();
+  reset(){
+    this.game = new Game(true);
   }
-  if(key == " " && game.isDeath()){
-    console.log(game.getInputs())
-    reset()
+
+  update(){
+    if(!this.game.isDeath()){
+      this.game.update()
+    }
+  }
+
+  changeGameState(){
+    return false;
+  }
+
+  render(){
+
+  }
+
+  keyHandeler(key){
+    this.game.dino.score = round(this.game.dino.score)
+    if(key == " "){
+      this.game.jump();
+    }
+    if(key == " " && this.game.isDeath()){
+      this.reset()
+    }
   }
 }

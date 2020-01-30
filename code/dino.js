@@ -42,6 +42,7 @@ class Dino{
 
   jump(){
     if(this.y >= this.ground || this.isJumping < 2){
+      console.log(this.isJumping)
       this.isJumping++;
       this.yVell = -34
       sJump.play();
