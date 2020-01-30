@@ -18,7 +18,7 @@ function preload(){
 
 function setup() {
   song.play();
-  song.loop(true);
+  song.setLoop(true);
   song.setVolume(0.4);
   createCanvas(displayWidth-20, displayHeight-200);
   reset();
