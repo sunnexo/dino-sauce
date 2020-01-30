@@ -56,7 +56,9 @@ class Cactus{
           text("score: "+round(dino.score), 100, height/2-25)
           text("high score: "+highScore, 100, height/2+25)
           pop()
-          sDamage.play();
+          if(!sDamage.isPlaying()){
+            sDamage.play();
+          }
           dino.run = false;
         }
       }
