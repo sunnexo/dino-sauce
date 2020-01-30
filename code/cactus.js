@@ -1,5 +1,6 @@
 class Cactus{
     constructor(x){
+        this.canGivePoints = true;
         this.speed = 10
         this.x = x;
         this.y = Game.ground();
@@ -19,6 +20,7 @@ class Cactus{
           this.x -= this.speed;
       }
       else{
+          this.canGivePoints = true;
           this.x = width + random(0+this.speed*10, 400+this.speed*10+width/4);
           this.sprite = round(random(2, 4));  //random(-200, -50);
           this.dy = map(this.sprite, 2, 4, height*-0.15, height*-0.3);
@@ -40,7 +42,10 @@ class Cactus{
       // console.log(dino);
       this.speed = dino.score/10 + width*0.0083333333
       if(this.x > dino.x - dino.dx && this.x - this.dx < dino.x){
-        dino.score += 0.08333333333333333333333333333333;
+        if(this.canGivePoints){
+          dino.score += 1;
+          this.canGivePoints = false;
+        }
         if(this.y > dino.y + dino.dy && this.y + this.dy < dino.y){
           if(round(dino.score) > gameState.highScore){
             gameState.highScore = round(dino.score);

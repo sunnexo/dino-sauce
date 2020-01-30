@@ -1,4 +1,4 @@
-let gameState = new Menu();
+let gameState;
 
 function preload(){
   song = loadSound('audio/megaman-music.mp3');
@@ -15,6 +15,7 @@ function preload(){
 }
 
 function setup() {
+  gameState = new Menu()
   song.setLoop(true);
   song.setVolume(0.4);
   song.play();
