@@ -11,13 +11,25 @@ function preload(){
   iEnemy2 = loadImage('graphic/enemy2.png');
   iEnemy3 = loadImage('graphic/enemy3.png');
   iEnemy4 = loadImage('graphic/enemy4.png');
+  megaman_bg = loadImage('graphic/megaman-bg.png');
 }
 
 function setup() {
-  song.play();
-  song.loop(true);
+  song.setLoop(true);
   song.setVolume(0.4);
-  createCanvas(1500, 600);
+  song.play();
+  displayHeight -= 143
+  displayWidth -= 10
+  let w = displayHeight * (397/223);
+  let h = displayWidth * (223/397);
+  if(w<displayWidth){
+    createCanvas(w,displayHeight)
+    console.log("testest")
+  }else{
+    console.log("1234567")
+    createCanvas(displayHeight * (397/223), h)
+  }
+
 }
 
 

@@ -14,6 +14,7 @@ function preload(){
   iEnemy2 = loadImage('graphic/enemy2.png');
   iEnemy3 = loadImage('graphic/enemy3.png');
   iEnemy4 = loadImage('graphic/enemy4.png');
+  megaman_bg = loadImage('graphic/megaman-bg.png');
 }
 
 function setup() {
@@ -22,6 +23,7 @@ function setup() {
   song.setVolume(0.4);
   // createCanvas(displayWidth-20, displayHeight-200);
   createCanvas(1500, 600);
+  // megaman_bg.resize(width, height);
   reset();
 }
 

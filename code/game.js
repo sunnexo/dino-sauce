@@ -10,9 +10,13 @@ class Game{
     this.dead = false;
   }
 
+  static ground(){
+    return height - 100;
+  }
+
   update(){
     if(this.render){
-      background(200);
+      background(megaman_bg);
       push()
       fill(255)
       textSize(30);

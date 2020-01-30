@@ -2,9 +2,8 @@ class Cactus{
     constructor(x){
         this.speed = 10
         this.x = x;
-        this.y = height;
-        this.sprite = round(random(2, 4));  //random(-200, -50);
-        // this.dy = map(this.sprite, 2, 4, -100, -200);
+        this.y = Game.ground();
+        this.sprite = round(random(2, 4));
         this.dy = map(this.sprite, 2, 4, height*-0.15, height*-0.3);
         if(this.sprite === 2){
           this.sprite = iEnemy2;
@@ -43,8 +42,8 @@ class Cactus{
       if(this.x > dino.x - dino.dx && this.x - this.dx < dino.x){
         dino.score += 0.08333333333333333333333333333333;
         if(this.y > dino.y + dino.dy && this.y + this.dy < dino.y){
-          if(round(dino.score) > gameState.game.dino.highScore){
-            gameState.game.dino.highScore = round(dino.score);
+          if(round(dino.score) > gameState.highScore){
+            gameState.highScore = round(dino.score);
           }
           fill(255, 0, 0);
           textSize(52);
@@ -54,8 +53,8 @@ class Cactus{
           push()
           textSize(40);
           fill(255);
-          text("score: "+round(dino.score), 100, height/2-25)
-          text("high score: "+gameState.game.dino.highScore, 100, height/2+25)
+          text("score: "+round(dino.score), 50, height/2-25)
+          text("high score: "+gameState.highScore, 50, height/2+25)
           pop()
           if(!sDamage.isPlaying()){
             sDamage.play();
