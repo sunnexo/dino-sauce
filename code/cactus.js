@@ -53,7 +53,6 @@ class Cactus{
           dino.score += 1;
           this.canGivePoints = false;
         }
-        console.log(this, dino)
         if(this.y > dino.y + dino.dy + dino.dy/2 && this.y + this.dy < dino.y){
           gameOver(dino)
         }
@@ -62,19 +61,42 @@ class Cactus{
 }
 
 function gameOver(dino){
-  if(round(dino.score) > gameState.highScore){
+  if(round(dino.score) > gameState.lowScore){
+    let allReadyIn = false;
+    let min = Infinity;
+    let us = NaN;
+    let buff = ""
+    for(var key in gameState.highScoreData){
+      if(gameState.name == key){
+        allReadyIn = true;
+      }
+      if(gameState.highScoreData[key] < min){
+        us = key;
+        min = gameState.highScoreData[key];
+      }
+    }
+    if(!allReadyIn){
+      delete gameState.highScoreData[us]
+    }
+    gameState.highScoreData[gameState.name] = round(dino.score)
     gameState.highScore = round(dino.score);
+    for(var key in gameState.highScoreData){
+      buff += key+":"+str(gameState.highScoreData[key])+" "
+    }
+    setCookie("highScore", buff);
+    buff = buff.replace(/ /g, "\n")
+    alert(buff);
   }
-  background(0);
-  image(iGameover,0,0,width,height);
-  push()
-  textSize(40);
-  fill(255);
-  text("score: "+round(dino.score), 50, height/2-25)
-  text("high score: "+gameState.highScore, 50, height/2+25)
-  pop()
   if(!sDamage.isPlaying()){
     sDamage.play();
   }
+  background(0);
+  image(iGameover,0,0,width,height);
+  push();
+  textSize(40);
+  fill(255);
+  text("score: "+round(dino.score), 50, height/2-25);
+  text("high score: "+gameState.highScore, 50, height/2+25);
+  pop();
   dino.run = false;
 }

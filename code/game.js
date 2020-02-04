@@ -3,11 +3,6 @@ class Game{
     this.render = render;
     this.dino = new Dino();
     this.cactuses = [];
-    // this.cactuses.push(new Cactus(width+0));
-    // this.cactuses.push(new Cactus(width+(width/4)*1));
-    // this.cactuses.push(new Cactus(width+(width/4)*3));
-    // this.cactuses.push(new Cactus(width*2));
-
     for(var i = 0; i < floor(width/(width/5)); i++){
       this.cactuses.push(new Cactus(width + i* width/3))
     }

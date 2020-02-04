@@ -6,8 +6,6 @@ class Dino{
     this.score = 0;
     this.dy = height*-0.18
     this.dx = -this.dy*0.875
-    // this.dx = 80*1.1;
-    // this.dy = -100*1.1;
     this.x = 120;
     this.y = Game.ground();
     this.yVell = 0;
