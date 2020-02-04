@@ -16,6 +16,7 @@ function preload(){
 
 function setup() {
   gameState = new Menu()
+  frameRate(7)
   song.setLoop(true);
   song.setVolume(0.4);
   song.play();
@@ -25,9 +26,7 @@ function setup() {
   let h = displayWidth * (223/397);
   if(w<displayWidth){
     createCanvas(w,displayHeight)
-    console.log("testest")
   }else{
-    console.log("1234567")
     createCanvas(displayHeight * (397/223), h)
   }
 

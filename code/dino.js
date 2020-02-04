@@ -15,6 +15,7 @@ class Dino{
   }
 
   update(){
+    this.move();
     if(this.jump>0){
       this.dx = -this.dy*0.8
     }else{
@@ -43,6 +44,10 @@ class Dino{
     }else{
       image(iPlayerJump, this.x, this.y, this.dx, this.dy)
     }
+    push()
+    noFill()
+    rect(this.x, this.y, this.dx, this.dy)
+    pop()
   }
 
   jump(){
@@ -50,6 +55,14 @@ class Dino{
       this.isJumping++;
       this.yVell = -35;
       sJump.play();
+    }
+  }
+
+  move(){
+    if(keyIsDown(97) || keyIsDown(65)){
+      this.x -= 8;
+    }else if(keyIsDown(100) || keyIsDown(68)){
+      this.x += 5;
     }
   }
 }

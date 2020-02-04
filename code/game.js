@@ -11,16 +11,24 @@ class Game{
   }
 
   static ground(){
-    return height - 100;
+    return height - 78;
   }
 
   update(){
     if(this.render){
+      this.dead = !this.dino.run
+      for(var i = 0; i < this.cactuses.length; i++){
+        let cactus = this.cactuses[i]
+        cactus.collision(this.dino);
+        cactus.move();
+      }
+      this.dino.update();
       background(megaman_bg);
       push()
       fill(255)
       textSize(30);
       text("Score: "+round(this.dino.score), 40, 40)
+      text("High score: "+ gameState.highScore, 40, 80)
       pop()
       this.dino.render()
       for(var i = 0; i < this.cactuses.length; i++){
@@ -29,12 +37,7 @@ class Game{
       }
     }
     this.dead = !this.dino.run
-    for(var i = 0; i < this.cactuses.length; i++){
-      let cactus = this.cactuses[i]
-      cactus.move();
-      cactus.collision(this.dino);
-    }
-    this.dino.update();
+
   }
 
   jump(){

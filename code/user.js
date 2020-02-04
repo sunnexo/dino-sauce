@@ -8,6 +8,7 @@ class User{
     this.game;
     this.reset();
   }
+  
   reset(){
     this.game = new Game(true);
   }

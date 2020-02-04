@@ -36,6 +36,10 @@ class Cactus{
 
     render(){
       image(this.sprite,this.x, this.y, this.dx, this.dy)
+      push()
+      noFill()
+      rect(this.x, this.y, this.dx, this.dy)
+      pop()
     }
 
     collision(dino){
