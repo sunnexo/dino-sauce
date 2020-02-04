@@ -15,6 +15,12 @@ class Dino{
   }
 
   update(){
+    if(this.jump>0){
+      this.dx = -this.dy*0.8
+    }else{
+      this.dx = -this.dy*0.875
+    }
+
     if(this.y > Game.ground()){
       sLand.play()
       this.isJumping = 0;
@@ -42,7 +48,7 @@ class Dino{
   jump(){
     if(this.y >= Game.ground() || this.isJumping < 2){
       this.isJumping++;
-      this.yVell = -35
+      this.yVell = -35;
       sJump.play();
     }
   }

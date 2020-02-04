@@ -39,7 +39,6 @@ class Cactus{
     }
 
     collision(dino){
-      // console.log(dino);
       this.speed = dino.score/10 + width*0.0083333333
       if(this.x > dino.x - dino.dx && this.x - this.dx < dino.x){
         if(this.canGivePoints){
@@ -47,25 +46,29 @@ class Cactus{
           this.canGivePoints = false;
         }
         if(this.y > dino.y + dino.dy && this.y + this.dy < dino.y){
-          if(round(dino.score) > gameState.highScore){
-            gameState.highScore = round(dino.score);
-          }
-          fill(255, 0, 0);
-          textSize(52);
-          text("GAME OVER", width/2-200, height/2);
-          background(0);
-          image(iGameover,0,0,width,height);
-          push()
-          textSize(40);
-          fill(255);
-          text("score: "+round(dino.score), 50, height/2-25)
-          text("high score: "+gameState.highScore, 50, height/2+25)
-          pop()
-          if(!sDamage.isPlaying()){
-            sDamage.play();
-          }
-          dino.run = false;
+          gameOver(dino)
         }
       }
     }
+}
+
+function gameOver(dino){
+  if(round(dino.score) > gameState.highScore){
+    gameState.highScore = round(dino.score);
+  }
+  fill(255, 0, 0);
+  textSize(52);
+  text("GAME OVER", width/2-200, height/2);
+  background(0);
+  image(iGameover,0,0,width,height);
+  push()
+  textSize(40);
+  fill(255);
+  text("score: "+round(dino.score), 50, height/2-25)
+  text("high score: "+gameState.highScore, 50, height/2+25)
+  pop()
+  if(!sDamage.isPlaying()){
+    sDamage.play();
+  }
+  dino.run = false;
 }
