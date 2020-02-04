@@ -35,21 +35,26 @@ class Cactus{
     }
 
     render(){
-      image(this.sprite,this.x, this.y, this.dx, this.dy)
+      image(this.sprite,this.x, this.y, -this.dx, this.dy)
       push()
       noFill()
-      rect(this.x, this.y, this.dx, this.dy)
+      stroke(255, 0, 100)
+      strokeWeight(3)
+      rect(this.x, this.y, -this.dx, this.dy)
       pop()
     }
 
     collision(dino){
       this.speed = dino.score/10 + width*0.0083333333
-      if(this.x > dino.x - dino.dx && this.x - this.dx < dino.x){
+      // if(this.x > dino.x - dino.dx && this.x - this.dx < dino.x){
+      if(this.x < dino.x + dino.dx/2 + dino.dx && this.x + this.dx > dino.x + this.dx){
+
         if(this.canGivePoints){
           dino.score += 1;
           this.canGivePoints = false;
         }
-        if(this.y > dino.y + dino.dy && this.y + this.dy < dino.y){
+        console.log(this, dino)
+        if(this.y > dino.y + dino.dy + dino.dy/2 && this.y + this.dy < dino.y){
           gameOver(dino)
         }
       }
@@ -60,9 +65,6 @@ function gameOver(dino){
   if(round(dino.score) > gameState.highScore){
     gameState.highScore = round(dino.score);
   }
-  fill(255, 0, 0);
-  textSize(52);
-  text("GAME OVER", width/2-200, height/2);
   background(0);
   image(iGameover,0,0,width,height);
   push()

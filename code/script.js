@@ -16,19 +16,19 @@ function preload(){
 
 function setup() {
   gameState = new Menu()
-  frameRate(7)
   song.setLoop(true);
   song.setVolume(0.4);
   song.play();
   displayHeight -= 143
-  displayWidth -= 10
+  displayWidth -= 0
   let w = displayHeight * (397/223);
   let h = displayWidth * (223/397);
-  if(w<displayWidth){
-    createCanvas(w,displayHeight)
-  }else{
-    createCanvas(displayHeight * (397/223), h)
-  }
+  // if(w<displayWidth){
+  //   createCanvas(w,displayHeight)
+  // }else{
+  //   createCanvas(displayHeight * (397/223), h)
+  // }
+  createCanvas(displayWidth, displayHeight)
 
 }
 

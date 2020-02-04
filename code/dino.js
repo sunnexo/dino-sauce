@@ -39,13 +39,15 @@ class Dino{
 
   render(){
     fill(200, 100, 0);
-    if(this.isJumping === 0){
+    if(this.isJumping == 0){
       image(iPlayerStand, this.x, this.y, this.dx, this.dy)
     }else{
       image(iPlayerJump, this.x, this.y, this.dx, this.dy)
     }
     push()
     noFill()
+    strokeWeight(4);
+    stroke(255, 204, 100);
     rect(this.x, this.y, this.dx, this.dy)
     pop()
   }
@@ -60,7 +62,7 @@ class Dino{
 
   move(){
     if(keyIsDown(97) || keyIsDown(65)){
-      this.x -= 8;
+      this.x -= 7;
     }else if(keyIsDown(100) || keyIsDown(68)){
       this.x += 5;
     }

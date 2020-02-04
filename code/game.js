@@ -3,10 +3,14 @@ class Game{
     this.render = render;
     this.dino = new Dino();
     this.cactuses = [];
-    this.cactuses.push(new Cactus(width+0));
-    this.cactuses.push(new Cactus(width+(width/4)*1));
-    this.cactuses.push(new Cactus(width+(width/4)*3));
-    this.cactuses.push(new Cactus(width*2));
+    // this.cactuses.push(new Cactus(width+0));
+    // this.cactuses.push(new Cactus(width+(width/4)*1));
+    // this.cactuses.push(new Cactus(width+(width/4)*3));
+    // this.cactuses.push(new Cactus(width*2));
+
+    for(var i = 0; i < floor(width/(width/5)); i++){
+      this.cactuses.push(new Cactus(width + i* width/3))
+    }
     this.dead = false;
   }
 
@@ -16,25 +20,27 @@ class Game{
 
   update(){
     if(this.render){
-      this.dead = !this.dino.run
+      background(megaman_bg);
+      push()
+      fill(255)
+      textSize(30);
+      if(round(this.dino.score) > gameState.highScore){
+        gameState.highScore = round(this.dino.score);
+      }
+      text("Score: "+round(this.dino.score), 40, 40)
+      text("High score: "+ gameState.highScore, 40, 80)
+      pop()
+      for(var i = 0; i < this.cactuses.length; i++){
+        let cactus = this.cactuses[i]
+        cactus.render();
+      }
+      this.dino.render()
       for(var i = 0; i < this.cactuses.length; i++){
         let cactus = this.cactuses[i]
         cactus.collision(this.dino);
         cactus.move();
       }
       this.dino.update();
-      background(megaman_bg);
-      push()
-      fill(255)
-      textSize(30);
-      text("Score: "+round(this.dino.score), 40, 40)
-      text("High score: "+ gameState.highScore, 40, 80)
-      pop()
-      this.dino.render()
-      for(var i = 0; i < this.cactuses.length; i++){
-        let cactus = this.cactuses[i]
-        cactus.render();
-      }
     }
     this.dead = !this.dino.run
 
