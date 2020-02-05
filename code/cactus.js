@@ -36,12 +36,12 @@ class Cactus{
 
     render(){
       image(this.sprite,this.x, this.y, -this.dx, this.dy)
-      push()
-      noFill()
-      stroke(255, 0, 100)
-      strokeWeight(3)
-      rect(this.x, this.y, -this.dx, this.dy)
-      pop()
+      // push()
+      // noFill()
+      // stroke(255, 0, 100)
+      // strokeWeight(3)
+      // rect(this.x, this.y, -this.dx, this.dy)
+      // pop()
     }
 
     collision(dino){
@@ -66,6 +66,8 @@ function gameOver(dino){
     let allReadyIn = false;
     let min = Infinity;
     let us = NaN;
+
+
     for(var key in gameState.highScoreData){
       if(gameState.name == key){
         allReadyIn = true;
@@ -80,6 +82,7 @@ function gameOver(dino){
     }
     gameState.highScoreData[gameState.name] = round(dino.score)
     gameState.highScore = round(dino.score);
+    gameState.highScoreData = sort_object(gameState.highScoreData)
     for(var key in gameState.highScoreData){
       buff += key+":"+str(gameState.highScoreData[key])+" "
     }
@@ -108,4 +111,28 @@ function gameOver(dino){
   text(buff, width-width/4, height/2+25)
   pop();
   dino.run = false;
+}
+
+function sort_object(obj) {
+  var keys = [];
+  for(var key in obj) {
+   keys[keys.length] = key;
+  }
+  var values = [];
+  for(var i = 0; i < keys.length; i++) {
+     values[values.length] = obj[keys [i]];
+  }
+  var sortedValues = values.sort(function(a, b){
+    return b - a;
+  });
+  newDict = {}
+  for(var i = 0; i < values.length; i++){
+    newDict[getKeyByValue(obj, values[i])] = values[i]
+  }
+  console.log(newDict);
+  return newDict
+}
+
+function getKeyByValue(object, value) {
+  return Object.keys(object).find(key => object[key] === value);
 }

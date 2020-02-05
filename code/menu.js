@@ -3,12 +3,15 @@
 class Menu{
   constructor(){
     this.return = false;
-    this.button = new Button(width/2, height/2, 200, 200, "test");
+    this.AIButton = new Button(width/3-200, height/2-100, 400, 200, "AI", 165, color("BLUE"));
+    this.UserButton = new Button(width-width/3-200, height/2-100, 400, 200, "USER", 65, color("GREEN"));
   }
 
   update(){
-    if(this.button.isClick()){
+    if(this.UserButton.isClick()){
       this.return = new User();
+    }if(this.AIButton.isClick()){
+      this.return = new AI();
     }
   }
 
@@ -18,7 +21,8 @@ class Menu{
 
   render(){
     background(100);
-    this.button.render()
+    this.UserButton.render()
+    this.AIButton.render()
   }
 
   keyHandeler(key){
@@ -32,12 +36,15 @@ class Menu{
 
 
 class Button{
-  constructor(x, y, w, h, text){
+  constructor(x, y, w, h, text, textX, color){
     this.x = x;
     this.y = y;
     this.w = w;
     this.h = h;
     this.text = text;
+    this.textX = textX;
+    this.color = color;
+    console.log(x, y, w, h)
   }
 
   render(){
@@ -45,13 +52,12 @@ class Button{
     if(mouseX < this.x+this.w && mouseX > this.x && mouseY > this.y && mouseY < this.y + this.h){
       fill(255, 0, 0);
     }else{
-      fill(100, 255, 0)
+      fill(this.color)
     }
     rect(this.x, this.y, this.w, this.h);
     fill(0)
     textSize(this.h/2);
-    text(this.text, this.x+10, this.y+130);
-
+    text(this.text, this.x+this.textX, this.y+130);
   }
 
   isClick(){

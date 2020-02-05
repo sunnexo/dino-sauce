@@ -6,10 +6,10 @@ class User{
     this.highScore = 0;
     this.lowScore = Infinity;
     this.highScoreData = {}
-    let buff = getCookie("highScore")
-    buff = buff.split(" ")
+    let buff = getCookie("highScore");
+    buff = buff.split(" ");
     for(var i = 0; i<buff.length; i++){
-      let user = buff[i].split(":")
+      let user = buff[i].split(":");
       this.highScoreData[user[0]] = int(user[1])
       if(this.highScore < int(user[1])){
         this.highScore = int(user[1])
@@ -18,8 +18,6 @@ class User{
         this.lowScore = int(user[1])
       }
     }
-    this.dino;
-    this.cactuses = [];
     this.game;
     this.reset();
     this.name = "";
@@ -28,7 +26,7 @@ class User{
   }
 
   reset(){
-    this.game = new Game(true);
+    this.game = new Game(true, false);
   }
 
   update(){

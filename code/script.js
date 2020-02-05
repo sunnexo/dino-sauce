@@ -15,7 +15,6 @@ function preload(){
 }
 
 function setup() {
-  gameState = new Menu()
   song.setLoop(true);
   song.setVolume(0.4);
   song.play();
@@ -29,7 +28,7 @@ function setup() {
   //   createCanvas(displayHeight * (397/223), h)
   // }
   createCanvas(displayWidth, displayHeight)
-
+  gameState = new Menu()
 }
 
 

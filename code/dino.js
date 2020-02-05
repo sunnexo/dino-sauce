@@ -1,6 +1,6 @@
 
 class Dino{
-  constructor(){
+  constructor(isBot){
     this.run = true;
     this.isJumping = 0;
     this.score = 0;
@@ -10,10 +10,15 @@ class Dino{
     this.y = Game.ground();
     this.yVell = 0;
     this.grav = -1.9;
+    this.isBot = isBot;
+    this.leftSpeed = 12
+    this.rightSpeed = 10
   }
 
   update(){
-    this.move();
+    if(!this.isBot){
+      this.move();
+    }
     if(this.jump>0){
       this.dx = -this.dy*0.8
     }else{
@@ -42,12 +47,12 @@ class Dino{
     }else{
       image(iPlayerJump, this.x, this.y, this.dx, this.dy)
     }
-    push()
-    noFill()
-    strokeWeight(4);
-    stroke(255, 204, 100);
-    rect(this.x, this.y, this.dx, this.dy)
-    pop()
+    // push()
+    // noFill()
+    // strokeWeight(4);
+    // stroke(255, 204, 100);
+    // rect(this.x, this.y, this.dx, this.dy)
+    // pop()
   }
 
   jump(){
@@ -61,10 +66,10 @@ class Dino{
   move(){
     if(keyIsDown(97) || keyIsDown(65)){
       // this.x -= 7;
-      this.x -= 12;
+      this.x -= this.leftSpeed;
     }else if(keyIsDown(100) || keyIsDown(68)){
       // this.x += 5;
-      this.x += 10;
+      this.x += this.rightSpeed;
     }
   }
 }
