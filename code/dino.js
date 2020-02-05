@@ -60,9 +60,11 @@ class Dino{
 
   move(){
     if(keyIsDown(97) || keyIsDown(65)){
-      this.x -= 7;
+      // this.x -= 7;
+      this.x -= 12;
     }else if(keyIsDown(100) || keyIsDown(68)){
-      this.x += 5;
+      // this.x += 5;
+      this.x += 10;
     }
   }
 }

@@ -2,7 +2,7 @@
 
 class User{
   constructor(){
-    // setCookie("highScore", "Teun:5 Bink:10 Hugo:15")
+    // setCookie("highScore", "Teun:0 Bink:0 Hugo:5")
     this.highScore = 0;
     this.lowScore = Infinity;
     this.highScoreData = {}
@@ -60,6 +60,7 @@ class User{
 }
 
 function setCookie(cname, cvalue) {
+  console.log(cname, cvalue)
   var d = new Date();
   d.setTime(d.getTime() + (365*24*60*60*1000));
   var expires = "expires="+ d.toUTCString();

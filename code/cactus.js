@@ -61,11 +61,11 @@ class Cactus{
 }
 
 function gameOver(dino){
+  let buff = ""
   if(round(dino.score) > gameState.lowScore){
     let allReadyIn = false;
     let min = Infinity;
     let us = NaN;
-    let buff = ""
     for(var key in gameState.highScoreData){
       if(gameState.name == key){
         allReadyIn = true;
@@ -83,9 +83,15 @@ function gameOver(dino){
     for(var key in gameState.highScoreData){
       buff += key+":"+str(gameState.highScoreData[key])+" "
     }
+    console.log(buff)
     setCookie("highScore", buff);
     buff = buff.replace(/ /g, "\n")
-    alert(buff);
+  }
+  if(buff == ""){
+    for(var key in gameState.highScoreData){
+      buff += key+":"+str(gameState.highScoreData[key])+" "
+    }
+    buff = buff.replace(/ /g, "\n")
   }
   if(!sDamage.isPlaying()){
     sDamage.play();
@@ -97,6 +103,9 @@ function gameOver(dino){
   fill(255);
   text("score: "+round(dino.score), 50, height/2-25);
   text("high score: "+gameState.highScore, 50, height/2+25);
+  text("score board:", width-width/4, height/2-25)
+  buff = buff.replace(/:/g, "\t=\t")
+  text(buff, width-width/4, height/2+25)
   pop();
   dino.run = false;
 }
