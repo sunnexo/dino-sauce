@@ -1,5 +1,6 @@
 class Game{
   constructor(render, isBot){
+    this.isAI = isBot;
     this.render = render;
     this.dino = new Dino(isBot);
     this.cactuses = [];
@@ -38,7 +39,7 @@ class Game{
       }
       this.dino.update();
     }
-    this.dead = !this.dino.run
+    this.dead = !this.dino.run;
 
   }
 

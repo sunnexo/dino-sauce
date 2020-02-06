@@ -1,6 +1,6 @@
 
 class Dino{
-  constructor(isBot){
+  constructor(isBot=false){
     this.run = true;
     this.isJumping = 0;
     this.score = 0;
@@ -26,7 +26,13 @@ class Dino{
     }
 
     if(this.y > Game.ground()){
-      sLand.play()
+      if(!this.isBot){
+        if(sound){
+          sLand.play()
+        }
+      }
+    }
+    if(this.y >= Game.ground()){
       this.isJumping = 0;
     }
     if(this.y >= Game.ground()){
@@ -56,20 +62,32 @@ class Dino{
   }
 
   jump(){
-    if(this.y >= Game.ground() || this.isJumping < 2){
+    if(this.y >= Game.ground() || this.isJumping < 1){
       this.isJumping++;
       this.yVell = -35;
-      sJump.play();
+      if(!this.isBot){
+        if(sound){
+          sJump.play();
+        }
+      }
     }
   }
 
-  move(){
-    if(keyIsDown(97) || keyIsDown(65)){
-      // this.x -= 7;
-      this.x -= this.leftSpeed;
-    }else if(keyIsDown(100) || keyIsDown(68)){
-      // this.x += 5;
-      this.x += this.rightSpeed;
+  move(left=NaN, right=NaN){
+    if(this.isBot){
+      if(left && this.x>=0){
+        this.x -= this.leftSpeed;
+      }if(right && this.x+this.dx<=width){
+        this.x += this.rightSpeed;
+      }
+    }else{
+      if((keyIsDown(97) || keyIsDown(65)) && this.x>=0){
+        // this.x -= 7;
+        this.x -= this.leftSpeed;
+      }else if((keyIsDown(100) || keyIsDown(68)) && this.x+this.dx<=width){
+        // this.x += 5;
+        this.x += this.rightSpeed;
+      }
     }
   }
 }

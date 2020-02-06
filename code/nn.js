@@ -102,18 +102,39 @@ class NeuralNetwork {
   }
 
 
+  static crossOver(parents){
+    let newNN = parents[0].nn.copy();
+    let pLen = parents.length;
+
+    newNN.weights_ih.map(function (val, i, j) {
+      return parents[int(round(random(0, pLen-1)))].nn.weights_ih.data[i][j]+randomGaussian(-0.01, 0.01);
+    });
+    newNN.weights_ho.map(function (val, i, j) {
+      return parents[round(random(0, pLen-1))].nn.weights_ho.data[i][j]+randomGaussian(-0.001, 0.001);
+    });
+    newNN.bias_h.map(function (val, i, j) {
+      return parents[round(random(0, pLen-1))].nn.bias_h.data[i][j]+randomGaussian(-0.001, 0.001);
+    });
+    newNN.bias_o.map(function (val, i, j) {
+      return parents[round(random(0, pLen-1))].nn.bias_o.data[i][j]+randomGaussian(-0.001, 0.001);
+    });
+    return newNN;
+  }
+
+
   // Adding function for neuro-evolution
   copy() {
     return new NeuralNetwork(this);
   }
 
   // Accept an arbitrary function for mutation
-  mutate(rate) {
+  mutate(rate, change=0.1) {
     function mutate(val) {
       if (Math.random() < rate) {
-        // return 2 * Math.random() - 1;
-        return val + randomGaussian(0, 0.1);
-      } else {
+        return val + randomGaussian(-change, change);
+      }else if (Math.random() < rate/100) {
+        return 2 * Math.random() - 1;
+      }else {
         return val;
       }
     }

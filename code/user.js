@@ -23,6 +23,7 @@ class User{
     this.name = "";
     this.inp = true;
     this.inputBox = new InputBox(width/2-200, height/2);
+    this.return = false;
   }
 
   reset(){
@@ -32,6 +33,8 @@ class User{
   update(){
     if(this.name == ""){
       background(0);
+    }else{
+      this.inputBox = NaN;
     }
     if(!this.game.isDeath() && this.name != ""){
       this.game.update()
@@ -39,7 +42,7 @@ class User{
   }
 
   changeGameState(){
-    return false;
+    return this.return;
   }
 
   render(){
@@ -53,6 +56,9 @@ class User{
     }
     if(key == " " && this.game.isDeath()){
       this.reset()
+    }
+    if(key == "r" && this.name!=""){
+      this.return = new User()
     }
   }
 }

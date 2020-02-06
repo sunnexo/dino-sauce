@@ -4,11 +4,11 @@ class Cactus{
         this.speed = 10
         this.x = x;
         this.y = Game.ground();
-        this.sprite = round(random(2, 4));
-        this.dy = map(this.sprite, 2, 4, height*-0.15, height*-0.3);
-        if(this.sprite === 2){
+        this.height = round(random(2, 4));
+        this.dy = map(this.height, 2, 4, height*-0.15, height*-0.3);
+        if(this.height === 2){
           this.sprite = iEnemy2;
-        }else if(this.sprite === 3){
+        }else if(this.height === 3){
           this.sprite = iEnemy3;
         }else{
           this.sprite = iEnemy4;
@@ -22,11 +22,11 @@ class Cactus{
       else{
           this.canGivePoints = true;
           this.x = width + random(0+this.speed*10, 400+this.speed*10+width/4);
-          this.sprite = round(random(2, 4));  //random(-200, -50);
-          this.dy = map(this.sprite, 2, 4, height*-0.15, height*-0.3);
-          if(this.sprite === 2){
+          this.height = round(random(2, 4));  //random(-200, -50);
+          this.dy = map(this.height, 2, 4, height*-0.15, height*-0.3);
+          if(this.height === 2){
             this.sprite = iEnemy2;
-          }else if(this.sprite === 3){
+          }else if(this.height === 3){
             this.sprite = iEnemy3;
           }else{
             this.sprite = iEnemy4;
@@ -44,18 +44,23 @@ class Cactus{
       // pop()
     }
 
-    collision(dino){
+    collision(dino, justReturn=false){
       this.speed = dino.score/10 + width*0.0083333333
-      // if(this.x > dino.x - dino.dx && this.x - this.dx < dino.x){
       if(this.x < dino.x + dino.dx/2 + dino.dx && this.x + this.dx > dino.x + this.dx){
-
         if(this.canGivePoints){
           dino.score += 1;
           this.canGivePoints = false;
         }
         if(this.y > dino.y + dino.dy + dino.dy/2 && this.y + this.dy < dino.y){
-          gameOver(dino)
+          if(justReturn){
+            return true;
+          }else{
+            gameOver(dino)
+          }
         }
+      }
+      if(justReturn){
+        return false;
       }
     }
 }
@@ -96,9 +101,12 @@ function gameOver(dino){
     }
     buff = buff.replace(/ /g, "\n")
   }
-  if(!sDamage.isPlaying()){
-    sDamage.play();
+  if(sound){
+    if(!sDamage.isPlaying()){
+      sDamage.play();
+    }
   }
+
   background(0);
   image(iGameover,0,0,width,height);
   push();
