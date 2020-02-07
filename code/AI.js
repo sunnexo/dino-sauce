@@ -6,7 +6,7 @@ class AI{
       this.cactuses.push(new Cactus(width + random(0, width * 2)))
     }
     this.backupAIs = []
-    this.size = 5000;  // how many AIs are training
+    this.size = 100;  // how many AIs are training
     this.speed = 10; // call update n time before calling render
     this.ais = []; // an array where all the AIs will be.
     this.hiddenNodes = 15;
@@ -19,7 +19,7 @@ class AI{
     // }
     this.showOne = false;
     this.showOneIndex = 0;
-    this.howManyToRender = 20;
+    this.howManyToRender = 100;
     // this.deadAIs = [];
     this.roundNumber = 0;
     this.return = false;

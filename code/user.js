@@ -60,6 +60,9 @@ class User{
     if(key == "r" && this.name!=""){
       this.return = new User()
     }
+    if(key == "m" && this.name!=""){
+      this.return = new Menu()
+    }
   }
 }
 

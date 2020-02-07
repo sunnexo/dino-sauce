@@ -32,7 +32,7 @@ class Dino{
         }
       }
     }
-    if(this.y >= Game.ground()){
+    if(this.y > Game.ground()){
       this.isJumping = 0;
     }
     if(this.y >= Game.ground()){
@@ -48,11 +48,20 @@ class Dino{
 
   render(){
     fill(200, 100, 0);
-    if(this.isJumping == 0){
-      image(iPlayerStand, this.x, this.y, this.dx, this.dy)
+    if(this.isBot){
+      if(this.isJumping == 0){
+        image(iPlayerStand, this.x, this.y, this.dx, this.dy)
+      }else{
+        image(iPlayerJump, this.x, this.y, this.dx, this.dy)
+      }
     }else{
-      image(iPlayerJump, this.x, this.y, this.dx, this.dy)
+      if(this.isJumping == 0){
+        image(iPlayerStand, this.x, this.y, this.dx, this.dy)
+      }else{
+        image(iPlayerJump, this.x, this.y, this.dx, this.dy)
+      }
     }
+
     // push()
     // noFill()
     // strokeWeight(4);
@@ -62,15 +71,28 @@ class Dino{
   }
 
   jump(){
-    if(this.y >= Game.ground() || this.isJumping < 1){
-      this.isJumping++;
-      this.yVell = -35;
-      if(!this.isBot){
-        if(sound){
-          sJump.play();
+    if(this.isBot){
+      if(this.y >= Game.ground() || this.isJumping < 1){
+        this.isJumping++;
+        this.yVell = -35;
+        if(!this.isBot){
+          if(sound){
+            sJump.play();
+          }
+        }
+      }
+    }else{
+      if(this.y >= Game.ground() || this.isJumping < 2){
+        this.isJumping++;
+        this.yVell = -35;
+        if(!this.isBot){
+          if(sound){
+            sJump.play();
+          }
         }
       }
     }
+
   }
 
   move(left=NaN, right=NaN){
@@ -81,7 +103,7 @@ class Dino{
         this.x += this.rightSpeed;
       }
     }else{
-      if((keyIsDown(97) || keyIsDown(65)) && this.x>=0){
+      if((keyIsDown(97) || keyIsDown(65)) && this.x+this.dx>=0){
         // this.x -= 7;
         this.x -= this.leftSpeed;
       }else if((keyIsDown(100) || keyIsDown(68)) && this.x+this.dx<=width){

@@ -45,7 +45,9 @@ class Cactus{
     }
 
     collision(dino, justReturn=false){
-      this.speed = dino.score/10 + width*0.0083333333
+      if(this.speed < 99){
+        this.speed = dino.score/10 + width*0.0083333333
+      }
       if(this.x < dino.x + dino.dx/2 + dino.dx && this.x + this.dx > dino.x + this.dx){
         if(this.canGivePoints){
           dino.score += 1;
@@ -86,8 +88,12 @@ function gameOver(dino){
       delete gameState.highScoreData[us]
     }
     gameState.highScoreData[gameState.name] = round(dino.score)
-    gameState.highScore = round(dino.score);
     gameState.highScoreData = sort_object(gameState.highScoreData)
+    for(let item in gameState.highScoreData){
+      if(gameState.highScore < item){
+        gameState.highScore = item;
+      }
+    }
     for(var key in gameState.highScoreData){
       buff += key+":"+str(gameState.highScoreData[key])+" "
     }

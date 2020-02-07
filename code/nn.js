@@ -110,13 +110,13 @@ class NeuralNetwork {
       return parents[int(round(random(0, pLen-1)))].nn.weights_ih.data[i][j]+randomGaussian(-0.01, 0.01);
     });
     newNN.weights_ho.map(function (val, i, j) {
-      return parents[round(random(0, pLen-1))].nn.weights_ho.data[i][j]+randomGaussian(-0.001, 0.001);
+      return parents[round(random(0, pLen-1))].nn.weights_ho.data[i][j];
     });
     newNN.bias_h.map(function (val, i, j) {
-      return parents[round(random(0, pLen-1))].nn.bias_h.data[i][j]+randomGaussian(-0.001, 0.001);
+      return parents[round(random(0, pLen-1))].nn.bias_h.data[i][j];
     });
     newNN.bias_o.map(function (val, i, j) {
-      return parents[round(random(0, pLen-1))].nn.bias_o.data[i][j]+randomGaussian(-0.001, 0.001);
+      return parents[round(random(0, pLen-1))].nn.bias_o.data[i][j];
     });
     return newNN;
   }
