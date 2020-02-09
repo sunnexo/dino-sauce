@@ -4,10 +4,10 @@
 class InnovationGenerator{
 
   constructor(){
-
+    this.currentInnovation = 0;
   }
 
   getInnovation(){
-    return NaN; // TODO: this...
+    return this.currentInnovation++;
   }
 }

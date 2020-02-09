@@ -14,4 +14,14 @@ class Connection{
   disable(){
     this.expressed = false;
   }
+
+  copy(){
+    return new Connection(
+      this.inNode,
+      this.outNode,
+      this.weight,
+      this.expressed,
+      this.innovation
+    );
+  }
 }
