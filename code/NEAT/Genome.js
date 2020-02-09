@@ -28,7 +28,7 @@ class Genome{
     }
   }
 
-  addConectionMutation(innovation, maxAttemps=5){
+  addConectionMutation(innovation, maxAttemps=20){
     let tries = 0;
     let success = false;
     while(tries < maxAttemps && success == false){
@@ -118,6 +118,18 @@ class Genome{
     }
     return child;
   }
+
+
+
+
+
+
+
+
+
+
+
+
 
   copy(){
     let newGenome = new Genome();

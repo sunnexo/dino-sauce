@@ -67,18 +67,18 @@ function setup(){
     p2.addNodeGene(node)
   }
   p1.addNodeGene(new Node("OUTPUT", 3));
-  p1.addNodeGene(new Node("HIDDEN", 4));
+  // p1.addNodeGene(new Node("HIDDEN", 4));
 
   p2.addNodeGene(new Node("OUTPUT", 3));
   p2.addNodeGene(new Node("HIDDEN", 4));
   p2.addNodeGene(new Node("HIDDEN", 5));
 
   p1.addConnectionGene(new Connection(0, 3, Math.random()*2-1, true, innovationP1.getInnovation()));
-  p1.addConnectionGene(new Connection(1, 3, Math.random()*2-1, false, innovationP1.getInnovation()));
+  p1.addConnectionGene(new Connection(1, 3, Math.random()*2-1, true, innovationP1.getInnovation()));
   p1.addConnectionGene(new Connection(2, 3, Math.random()*2-1, true, innovationP1.getInnovation()));
-  p1.addConnectionGene(new Connection(1, 4, Math.random()*2-1, true, innovationP1.getInnovation()));
-  p1.addConnectionGene(new Connection(4, 3, Math.random()*2-1, true, innovationP1.getInnovation()));
-  p1.addConnectionGene(new Connection(0, 4, Math.random()*2-1, false, innovationP1.getInnovation()));
+  // p1.addConnectionGene(new Connection(1, 4, Math.random()*2-1, true, innovationP1.getInnovation()));
+  // p1.addConnectionGene(new Connection(4, 3, Math.random()*2-1, true, innovationP1.getInnovation()));
+  // p1.addConnectionGene(new Connection(0, 4, Math.random()*2-1, false, innovationP1.getInnovation()));
 
   p2.addConnectionGene(new Connection(0, 3, Math.random()*2-1, true, innovationP2.getInnovation()));
   p2.addConnectionGene(new Connection(1, 3, Math.random()*2-1, true, innovationP2.getInnovation()));
@@ -93,18 +93,21 @@ function setup(){
   console.log(p1, p2);
   child = Genome.crossover(p2, p1);
   console.log(child);
-  frameRate(1)
 
 }
 
 function draw(){
   p1.render();
-  p1.mutate();
-  p1.addNodeMutation(innovationP1)
-  // child.addConectionMutation(innovationP2)
-  // child.addConectionMutation(innovationP2)
-  // child.addConectionMutation(innovationP2)
+}
 
-
-
+function keyPressed(){
+  if(key == "n"){
+    p1.addNodeMutation(innovationP1)
+  }
+  if(key == "w"){
+    p1.addConectionMutation(innovationP1)
+  }
+  if(key == "m"){
+    p1.mutate();
+  }
 }
