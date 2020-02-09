@@ -112,7 +112,9 @@ function gameOver(dino){
       sDamage.play();
     }
   }
-
+  if(round(dino.score) > gameState.localHighScore){
+    gameState.localHighScore = dino.score;
+  }
   background(0);
   image(iGameover,0,0,width,height);
   push();
@@ -120,6 +122,7 @@ function gameOver(dino){
   fill(255);
   text("score: "+round(dino.score), 50, height/2-25);
   text("high score: "+gameState.highScore, 50, height/2+25);
+  text("your high score: "+gameState.localHighScore, 50, height/2+75)
   text("score board:", width-width/4, height/2-25)
   buff = buff.replace(/:/g, "\t=\t")
   text(buff, width-width/4, height/2+25)

@@ -2,10 +2,12 @@
 
 class User{
   constructor(){
-    // setCookie("highScore", "Teun:0 Bink:0 Hugo:5")
+    setCookie("highScore", "Teun:121 Bink:155 Hugo:166")
+    setCookie("highScore", "Hugo:166 Bink:155 Teun:121")
     this.highScore = 0;
     this.lowScore = Infinity;
     this.highScoreData = {}
+    this.localHighScore = 0;
     let buff = getCookie("highScore");
     buff = buff.split(" ");
     for(var i = 0; i<buff.length; i++){

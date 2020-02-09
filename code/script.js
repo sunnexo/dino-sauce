@@ -50,11 +50,11 @@
 //   gameState.keyHandeler(key);
 // }
 
-let nn;
+let neat;
 function setup(){
   createCanvas(500, 500);
-  nn = new NEAT(3, 2);
-  nn.render()
+  neat = new Genome();
+  console.log(neat)
 }
 
 function draw(){

@@ -2,15 +2,16 @@
 class AI{
   constructor(){
     this.cactuses = [];
-    for(var i = 0; i < floor(width/(width/5)); i++){
+    for(var i = 0; i < floor(width/(width/4)); i++){
       this.cactuses.push(new Cactus(width + random(0, width * 2)))
     }
     this.backupAIs = []
-    this.size = 100;  // how many AIs are training
-    this.speed = 10; // call update n time before calling render
+    this.size = 1000;  // how many AIs are training
+    this.speed = 1; // call update n time before calling render
     this.ais = []; // an array where all the AIs will be.
-    this.hiddenNodes = 15;
-    this.NNinputs = width/(width/5)*2+3
+    this.hiddenNodes = 4;
+    // this.NNinputs = width/(width/4)*2+3
+    this.NNinputs = 5
     for(var i = 0; i < this.size; i++){
       this.ais.push(new playerBot(new NeuralNetwork(this.NNinputs, this.hiddenNodes, 3), true))
     }
@@ -19,14 +20,14 @@ class AI{
     // }
     this.showOne = false;
     this.showOneIndex = 0;
-    this.howManyToRender = 100;
+    this.howManyToRender = 200;
     // this.deadAIs = [];
     this.roundNumber = 0;
     this.return = false;
     this.timer = 0;
-    this.countTo = this.roundNumber*30 + 500;
-    this.mutate = 0.4;
-    this.mutateChange = 0.1;
+    this.countTo = this.roundNumber*30 + 100;
+    this.mutate = 0.05;
+    this.mutateChange = 0.003;
     this.debug = true;
     this.bestAILastRound = NaN;
     this.renderIfDead = true;
@@ -109,23 +110,28 @@ class AI{
   }
 
   allDead(bestAIs){
-    for(let ai of bestAIs){
+    let servival = false;
+    for(let ai of [...bestAIs]){
       if(ai.hits == 0){
+        servival = true;
         this.surviversAis.push(ai);
       }
+    }
+    if(servival){
+      this.countTo += 20;
     }
     this.roundNumber++;
     // this.countTo = this.roundNumber*30 + 1000;
     // this.mutate *= 0.9;
     this.cactuses = [];
-    for(var i = 0; i < floor(width/(width/5)); i++){
+    for(var i = 0; i < floor(width/(width/4)); i++){
       this.cactuses.push(new Cactus(width + random(0, width)))
     }
     this.ais = [];
+    // this.ais.concat([...this.surviversAis])
     for(var i = 0; i < this.size; i++){
       this.ais.push(new playerBot(bestAIs))
     }
-    this.ais.concat(this.surviversAis)
     // this.backupAIs = []
     // for(var i = 0; i < this.size; i++){
     //   this.backupAIs.push(this.ais[i]);
@@ -216,6 +222,8 @@ class AI{
       this.mutate *= 0.9;
     }if(key =="v"){
       this.mutate *= 1.1;
+    }if(key == "w"){
+      this.speed = 1;
     }
   }
 }
@@ -238,11 +246,11 @@ class playerBot{
   update(cactuses){
     this.player.update();
     let action = this.nn.predict(this.getInputs(cactuses));
-    if(action[0] > 0){
+    if(action[0] > 0.5){
       this.player.jump();
-    }if(action[1] > 0){
+    }if(action[1] > 0.5){
       this.player.move(false, true)
-    }if(action[2] > 0){
+    }if(action[2] > 0.5){
       this.player.move(true, false)
     }
     let hit = false;
@@ -261,18 +269,27 @@ class playerBot{
 
   getInputs(cactuses){
     var inputs = []
-    inputs.push(this.player.yVell/-50)
-    // inputs.push(this.player.isJumping/2)
+    inputs.push(map(this.player.yVell, -50, 50, -1, 1))
+    // inputs.push(this.player.isJumping-1)
     // inputs.push(this.player.dy/height*-0.22)
     // inputs.push(this.player.dx/width*0.0733333)
-    inputs.push(this.player.y/height)
-    inputs.push(this.player.x/width)
+    inputs.push(map(this.player.y, 0, height, -1, 0))
+    inputs.push(map(this.player.x, 0, width, -1, 1))
+    let cactus_s = Infinity;
+    let c = cactuses[0];
     for(var i = 0; i < cactuses.length; i++){
-      inputs.push(map(cactuses[i].x, -width, width * 2, -1, 0))
-      // inputs.push(cactuses[i].dx/width*0.0333)
-      inputs.push(map(cactuses[i].height, 2, 4, -1, 1))
-      // inputs.push(cactuses[i].speed/40)
+      if(cactuses[i].x > this.player.x && cactus_s > cactuses[i].x || c == NaN){
+        cactus_s = cactuses[i].x;
+        c = cactuses[i];
+      }
+      // inputs.push(map(cactuses[i].x, -width, width * 2, -1, 0))
+      // inputs.push(map(cactuses[i].height, 2, 4, -1, 1))
     }
+    // console.log(c);
+    inputs.push(map(c.x, -width*2, width*2, -1, 1))
+    inputs.push(map(c.height, 1, 4, -1, 1))
+
+
     // let overOne = false;
     // let index = NaN;
     // for(var i = 0; i < inputs.length; i++){

@@ -16,6 +16,11 @@ let tanh = new ActivationFunction(
   y => 1 - (y * y)
 );
 
+let relu = new ActivationFunction(
+  x => max(0, x),
+  y => 1 - (y * y)
+);
+
 
 class NeuralNetwork {
   /*
@@ -65,12 +70,12 @@ class NeuralNetwork {
     hidden.add(this.bias_h);
 
     // activation function
-    hidden.map(this.activation_function.func);
+    hidden.map(sigmoid.func);
 
     // Generating the output's output
     let output = Matrix.multiply(this.weights_ho, hidden);
     output.add(this.bias_o);
-    output.map(this.activation_function.func);
+    output.map(sigmoid.func);
 
     // Sending back to the caller
     return output.toArray();
@@ -102,12 +107,16 @@ class NeuralNetwork {
   }
 
 
-  static crossOver(parents){
-    let newNN = parents[0].nn.copy();
-    let pLen = parents.length;
-
+  static crossOver(p){
+    let newNN = new NeuralNetwork(p[0].nn.input_nodes, p[0].nn.hidden_nodes, p[0].nn.output_nodes)
+    let pLen = p.length;
+    let parents = [];
+    for(let per of p){
+      per.nn = per.nn.copy();
+      parents.push(per);
+    }
     newNN.weights_ih.map(function (val, i, j) {
-      return parents[int(round(random(0, pLen-1)))].nn.weights_ih.data[i][j]+randomGaussian(-0.01, 0.01);
+      return parents[int(round(random(0, pLen-1)))].nn.weights_ih.data[i][j];
     });
     newNN.weights_ho.map(function (val, i, j) {
       return parents[round(random(0, pLen-1))].nn.weights_ho.data[i][j];
@@ -131,9 +140,9 @@ class NeuralNetwork {
   mutate(rate, change=0.1) {
     function mutate(val) {
       if (Math.random() < rate) {
-        return val + randomGaussian(-change, change);
-      }else if (Math.random() < rate/100) {
-        return 2 * Math.random() - 1;
+        return val + randomGaussian(0, change);
+      // }else if (Math.random() < rate/100) {
+      //   return 2 * Math.random() - 1;
       }else {
         return val;
       }
