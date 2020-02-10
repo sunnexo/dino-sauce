@@ -21,7 +21,7 @@ class Genome {
       if (this.nodes[inID].type == "INPUT") {
         for (let outID in this.nodes) {
           if (this.nodes[outID].type == "OUTPUT") {
-            this.addConnectionGene(new Connection(inID, outID, Math.random() * 4 - 2, true, this.connectionCounter.getInnovation()))
+            this.addConnectionGene(new Connection(int(inID), int(outID), Math.random() * 4 - 2, true, this.connectionCounter.getInnovation()))
           }
         }
       }
@@ -37,13 +37,53 @@ class Genome {
     this.connections[gene.innovation] = gene;
   }
 
+  feed(inputs){
+    let outputs = [];
+    for (let inID in this.nodes) {
+      if (this.nodes[inID].type == "INPUT") {
+        this.nodes[inID].setVal(inputs[int(inID)]);
+      }
+    }
+    for(let outID in this.nodes){
+      if(this.nodes[outID].type == "OUTPUT"){
+        outputs.push(this.feedNode(outID));
+      }
+    }
+    return outputs;
+  }
+
+  feedNode(node_id){
+    var val = 0;
+    for(let con_id in this.connections){
+      let con = this.connections[con_id];
+      if(con.outNode == node_id){
+        if(this.nodes[con.inNode].type == "INPUT"){
+          val += this.nodes[node_id].feed(con.feed(this.nodes[con.inNode].val));
+        }else{
+          val += this.nodes[node_id].feed(con.feed(this.feedNode(con.inNode)));
+        }
+      }
+    }
+    return val;
+  }
+
   mutate() {
     for (let conID in this.connections) {
       let con = this.connections[conID];
       if (Math.random() < this.PROBABILITY_PERTURBING) {
-        con.weight *= Math.random() * 2 - 1; // TODO: adjust those values.
+        con.weight *= Math.random() * 4 - 2; // TODO: adjust those values.
+        // con.weight += Math.random() - 0.5; // TODO: adjust those values.
       } else {
-        con.weight = Math.random() * 4 - 2;
+        con.weight = Math.random() * 2 - 1;
+      }
+    }
+    for (let nodeID in this.nodes) {
+      let node = this.nodes[nodeID];
+      if (Math.random() < this.PROBABILITY_PERTURBING) {
+        node.bias *= Math.random() * 4 - 2; // TODO: adjust those values.
+        // node.bias += Math.random() - 0.5; // TODO: adjust those values.
+      } else {
+        node.bias = Math.random() * 2 - 1;
       }
     }
   }
@@ -68,10 +108,10 @@ class Genome {
 
       let connectionExists = false;
       for (let con in this.connections) {
-        if (this.connections[con].inNode == node1.id && this.connections[con].outNode == node2.id) {
+        if (this.connections[con].inNode === node1.id && this.connections[con].outNode === node2.id) {
           connectionExists = true;
           break;
-        } else if (this.connections[con].inNode == node2.id && this.connections[con].outNode == node1.id) {
+        } else if (this.connections[con].inNode === node2.id && this.connections[con].outNode === node1.id) {
           connectionExists = true;
           break;
         }
@@ -81,6 +121,8 @@ class Genome {
       if (node1.type == "INPUT" && node2.type == "INPUT") {
         connectionImpossible = true;
       } else if (node1.type == "OUTPUT" && node2.type == "OUTPUT") {
+        connectionImpossible = true;
+      } else if (node1.id == node2.id){
         connectionImpossible = true;
       }
       if (connectionExists || connectionImpossible) {
@@ -142,7 +184,7 @@ class Genome {
   }
 
 
-  static compatibilityDistance(genome1, genome2, c1, c2, c3) {
+  static compatibilityDistance(genome1, genome2, c1, c2, c3, n_max=20) {
     var excessGenes = 0;
     var disjointGenes = 0;
     var avgWeightDiff = 0;
@@ -160,7 +202,6 @@ class Genome {
     for (var i = 0; i <= indices; i++) {
       const node1 = genome1.nodes[i];
       const node2 = genome2.nodes[i];
-      console.log(node1, node2)
       if (node1 != undefined && node2 == undefined) {
         if (highestInnovation2 < i) {
           excessGenes++;
@@ -187,7 +228,6 @@ class Genome {
     for (var i = 0; i <= indices; i++) {
       const connection1 = genome1.connections[i];
       const connection2 = genome2.connections[i];
-      console.log(connection1, connection2)
       if (connection1 != undefined) {
         if (connection2 != undefined) {
           matchingGenes++;
@@ -207,8 +247,8 @@ class Genome {
     }
 
     avgWeightDiff = weightDifference / matchingGenes;
-    var n = max(Object.keys(genome1.nodes).length, Object.keys(genome2.nodes).length);
-    if (n < 20) {
+    var n = max(Object.keys(genome1.nodes).length+Object.keys(genome1.connections).length, Object.keys(genome2.nodes).length+Object.keys(genome2.connections).length);
+    if (n < n_max) {
       n = 1;
     }
     return (excessGenes * c1) / n + (disjointGenes * c2) / n + avgWeightDiff * c3;

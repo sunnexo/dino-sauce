@@ -24,4 +24,8 @@ class Connection{
       this.innovation
     );
   }
+
+  feed(val){
+    return val*this.weight;
+  }
 }

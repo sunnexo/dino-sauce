@@ -55,15 +55,19 @@ let p2;
 let child;
 let innovationP1;
 let innovationP2;
+
+const c1 = 1;
+const c2 = 1;
+const c3 = 1;
+const n_max = 50;
+
+
 function setup(){
   createCanvas(500, 500);
-  p1 = new Genome().init(2, 1);
-  p2 = new Genome().init(2, 1);
+  p1 = new Genome().init(2, 2);
+  p2 = new Genome().init(2, 2);
 
   child = Genome.crossover(p2, p1);
-
-  console.log(Genome.compatibilityDistance(p1, p2, 1, 1, 1));
-
 
 }
 
@@ -74,14 +78,17 @@ function draw(){
 function keyPressed(){
   if(key == "n"){
     p1.addNodeMutation()
-    console.log(Genome.compatibilityDistance(p1, p2, 1, 1, 1));
   }
   if(key == "w"){
     p1.addConectionMutation()
-    console.log(Genome.compatibilityDistance(p1, p2, 1, 1, 1))
   }
   if(key == "m"){
     p1.mutate();
-    console.log(Genome.compatibilityDistance(p1, p2, 1, 1, 1))
+  }
+  if(key == "f"){
+    console.log("output: "+p1.feed([0, 1]));
+  }
+  if(key == "d"){
+    console.log("species distance: "+Genome.compatibilityDistance(p1, p2, c1, c2, c3, n_max))
   }
 }

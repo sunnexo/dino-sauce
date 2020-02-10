@@ -7,6 +7,6 @@ class Counter{
   }
 
   getInnovation(){
-    return this.currentInnovation++;
+    return int(this.currentInnovation++);
   }
 }
