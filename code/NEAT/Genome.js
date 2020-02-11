@@ -104,7 +104,7 @@ class Genome {
     }
   }
 
-  addConectionMutation(maxAttemps = 100) {
+  addConectionMutation(maxAttemps = 20) {
     let tries = 0;
     let success = false;
     while (tries < maxAttemps && success == false) {
@@ -236,9 +236,9 @@ class Genome {
     }
 
     for (let parent1NodeId in parent1.connections) {
-      if (parent1.connections[parent1NodeId].innovation in parent2.connections) {
+      if (parent1.connections[parent1NodeId].innovation in parent2.connections && parent1.connections[parent1NodeId].inNode in parent2.nodes && parent1.connections[parent1NodeId].outNode in parent2.nodes) {
         // matching gene
-        let childConGene = round(Math.random()) ? parent1.connections[parent1NodeId].copy() : parent2.connections[parent1.connections[parent1NodeId].innovation].copy();
+        let childConGene = round(Math.random()) ? parent1.connections[parent1NodeId].copy() : parent2.connections[parent1NodeId].copy();
         child.addConnectionGene(childConGene)
       } else {
         // disjoint or exess gene
@@ -349,7 +349,12 @@ class Genome {
           stroke(0, 255, 0)
         }
         let delta = random(-20, 20)
-        line(this.nodes[con.inNode].x, this.nodes[con.inNode].y, this.nodes[con.outNode].x + this.nodes[con.outNode].xDelta, this.nodes[con.outNode].y + this.nodes[con.outNode].yDelta)
+        try{
+          line(this.nodes[con.inNode].x, this.nodes[con.inNode].y, this.nodes[con.outNode].x + this.nodes[con.outNode].xDelta, this.nodes[con.outNode].y + this.nodes[con.outNode].yDelta)
+        }catch(e){
+          console.log(e);
+          console.log(this.nodes, con)
+        }
         strokeWeight(4)
         point(this.nodes[con.outNode].x + this.nodes[con.outNode].xDelta, this.nodes[con.outNode].y + this.nodes[con.outNode].yDelta)
         pop()

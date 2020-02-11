@@ -2,8 +2,7 @@
 
 class User{
   constructor(){
-    // setCookie("highScore", "Midas:122 Bink:144 Hugo:166")
-    // setCookie("highScore", "Hugo:166 Bink:144 Midas:122")
+    // setCookie("highScore", "Hugo:166 Bink:144 Midas:133")
     this.highScore = 0;
     this.lowScore = Infinity;
     this.highScoreData = {}
