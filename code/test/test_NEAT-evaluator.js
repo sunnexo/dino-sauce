@@ -1,62 +1,45 @@
 
 
-const c1 = 1;
-const c2 = 1;
-const c3 = 1;
-const n_max = 50;
-
-let dra;
+let eval = NaN;
+let j = 0;
+let best = NaN;
 
 function setup(){
-  createCanvas(1200, 570);
-  p1 = new Genome().init(2, 2);
-  p2 = new Genome().init(2, 2);
-  child = Genome.crossover(p2, p1);
-  dra = new drawNN();
-  dra.NN = p1
+  createCanvas(600, 570);
+  eval = new Evaluator(100, new Genome().init(2, 1), function(genome){
+    var weightSum = 0;
+    for(let cg in genome.connections){
+      if(genome.connections[cg].expressed){
+        weightSum += Math.abs(genome.connections[cg].weight);
+      }
+    }
+    return (1000/Math.abs(weightSum-100));
+  });
+  eval.evaluate();
+  console.log("Generation: "+j);
+  console.log("highest fitness: "+eval.highestScore);
+  console.log("Amount of species: "+eval.species.length);
+  console.log("highest fitness: "+eval.highestScore);
+  console.log("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=");
+  best = eval.fittestGenome;
+  j++;
 }
 
 function draw(){
-  dra.NN.render();
+  best.render();
 }
 
 function keyPressed(){
-  if(key == "n"){
-    dra.NN.addNodeMutation()
+  if(key == "e"){
+    for(var i = 0; i < 10; i++){
+      eval.evaluate();
+      console.log("Generation: "+j);
+      console.log("highest fitness: "+eval.highestScore);
+      console.log("Amount of species: "+eval.species.length);
+      console.log("highest fitness: "+eval.highestScore);
+      console.log("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=");
+      best = eval.fittestGenome;
+      j++;
+    }
   }
-  if(key == "w"){
-    dra.NN.addConectionMutation()
-  }
-  if(key == "m"){
-    dra.NN.mutate();
-  }
-  if(key == "f"){
-    console.log("output: "+dra.NN.feed([0, 1]));
-  }
-  if(key == "d"){
-    console.log("species distance: "+Genome.compatibilityDistance(p1, p2, c1, c2, c3, n_max))
-  }
-  if(key == "c"){
-    dra.NN = Genome.crossover(p1, p2);
-  }
-  if(key == "1"){
-    dra.NN = p1;
-  }
-  if(key == "2"){
-    dra.NN = p2;
-  }
-  if(key == "3"){
-    dra.NN = child;
-  }
-  if(key == "r"){
-    p1 = new Genome().init(2, 2);
-    p2 = new Genome().init(2, 2);
-    child = Genome.crossover(p2, p1);
-    dra = new drawNN();
-    dra.NN = p1
-  }
-}
-
-function drawNN(){
-  this.NN = NaN;
 }

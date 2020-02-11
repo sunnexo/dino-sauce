@@ -5,10 +5,10 @@ class Evaluator {
     this.c1 = 1;
     this.c2 = 1;
     this.c3 = 0.4;
-    this.DT = 10;
-    this.MUTATION_RATE = 0.1;
-    this.ADD_CONNECTION_RATE = 0.003;
-    this.ADD_NODE_RATE = 0.01;
+    this.DT = 3;
+    this.MUTATION_RATE = 0.5;
+    this.ADD_CONNECTION_RATE = 0.1;
+    this.ADD_NODE_RATE = 0.1;
 
     this.populationSize = populationSize;
 
@@ -29,14 +29,28 @@ class Evaluator {
 
 
   evaluate() {
+    console.log({"species":[...this.species], "genomes":[...this.genomes], "next gen genomes":[...this.nextGenGenomes]})
+
+    // Reset everything for next generation
+    for(let s of this.species){
+      s.reset();
+    }
+    this.scoreMap = {};
+    this.speciesMap = {};
+    this.nextGenGenomes = [];
+    this.highestScore = 0;
+    this.fittestGenome = NaN;
+
+
     // Place genomes into species
     for (let g of this.genomes) {
-      let foundSpecies = false;
+      var foundSpecies = false;
       for (let s of this.species) {
-        if (Gonome.compatibilityDistance(g, s.mascot, this.c1, this.c2, this.c3) < this.DT) {
+        if (Genome.compatibilityDistance(g, s.mascot, this.c1, this.c2, this.c3) < this.DT) {
           s.members.push(g);
           this.speciesMap[g] = s;
           foundSpecies = true;
+          console.log(g)
           break;
         }
       }
@@ -46,9 +60,10 @@ class Evaluator {
         this.speciesMap[g] = newSpecies;
       }
     }
+    console.log({"species":[...this.species], "genomes":[...this.genomes], "next gen genomes":[...this.nextGenGenomes]})
 
     // Remove unused species
-    for(let i = this.species.length; i > 0; i--){ // TODO: check if correct
+    for(let i = this.species.length-1; i > 0; i--){ // TODO: check if correct
       if(this.species[i].members == []){
         this.species.pop(i);
       }
@@ -58,37 +73,44 @@ class Evaluator {
     for (let g of this.genomes) {
       let s = this.speciesMap[g];
       let score = this.evaluateGenome(g);
-      let adjustedScore = score / mappedSpecies[g].members.length();
+      let adjustedScore = score / this.speciesMap[g].members.length;
 
       s.addAdjustedFitness(adjustedScore);
       s.fitnessPop.push(new FitnessGenome(g, adjustedScore));
       this.scoreMap[g] = adjustedScore;
       if (score > this.highestScore) {
         this.highestScore = score;
-        fittestGenome = g;
+        this.fittestGenome = g;
       }
     }
+    console.log({"species":[...this.species], "genomes":[...this.genomes], "next gen genomes":[...this.nextGenGenomes]})
 
-    // PUt best genomes from each species into next generation
+    // Put best genomes from each species into next generation
+    // console.log("HELPHELP", [...this.species])
     for (let s of this.species) {
       let fittestInSpecies;
-      let highestFitnessScore = 0;
+      let highestFitnessScore = -1;
       for (let fp of s.fitnessPop) {
         if (highestFitnessScore < fp.fitness) {
           highestFitnessScore = fp.fitness;
           fittestInSpecies = fp.genome;
         }
       }
+      if(fittestInSpecies == undefined){
+        // console.log("HELPHELP"+fittestInSpecies, highestFitnessScore, [...this.species], this.speciesMap)
+      }
       this.nextGenGenomes.push(fittestInSpecies);
     }
+    console.log({"species":[...this.species], "genomes":[...this.genomes], "next gen genomes":[...this.nextGenGenomes]})
+
 
     // Breed the rest of the genomes
     while (this.nextGenGenomes.length < this.populationSize) {
       // replace removed genomes by randomly breeding
-      let s = getRandomSpeciesBiasedAdjustedFitness();
+      let s = this.getRandomSpeciesBiasedAdjustedFitness();
 
-      let p1 = getRandomGenomeBiasedAdjustedFitness(s);
-      let p2 = getRandomGenomeBiasedAdjustedFitness(s);
+      let p1 = this.getRandomGenomeBiasedAdjustedFitness(s);
+      let p2 = this.getRandomGenomeBiasedAdjustedFitness(s);
 
       let child;
       if (this.scoreMap[p2] >= this.scoreMap[p1]) {
@@ -107,8 +129,12 @@ class Evaluator {
       }
       this.nextGenGenomes.push(child);
     }
+    console.log({"species":[...this.species], "genomes":[...this.genomes], "next gen genomes":[...this.nextGenGenomes]})
 
-    this.genomes = this.nextGenGenomes;
+
+    this.genomes = [...this.nextGenGenomes];
+    console.log({"species":[...this.species], "genomes":[...this.genomes], "next gen genomes":[...this.nextGenGenomes]})
+
     this.nextGenGenomes = [];
   }
 
@@ -145,7 +171,7 @@ class Evaluator {
     let r = Math.random() * completeWeight;
     let countWeight = 0;
     for (let fg of selectFrom.fitnessPop) {
-      countWeight += s.fitness;
+      countWeight += fg.fitness;
       if (countWeight >= r) {
         return fg.genome;
       }
@@ -169,22 +195,4 @@ class FitnessGenome {
       return 0;
     }
   }
-}
-
-class FitnessGenomeComarator
-
-
-function sortOnKeys(dict) {
-  var sorted = [];
-  for (var key in dict) {
-    sorted[sorted.length] = key;
-  }
-  sorted.sort();
-
-  var tempDict = {};
-  for (var i = 0; i < sorted.length; i++) {
-    tempDict[sorted[i]] = dict[sorted[i]];
-  }
-
-  return tempDict;
 }

@@ -1,3 +1,6 @@
+
+
+
 class Genome {
   constructor() {
     this.PROBABILITY_PERTURBING = 0.9;
@@ -28,7 +31,7 @@ class Genome {
         }
       }
     }
-    return this
+    return this;
   }
 
   addNodeGene(gene) {
@@ -97,7 +100,6 @@ class Genome {
       if (Math.random() < this.PROBABILITY_PERTURBING) {
         // node.bias *= Math.random() * 4 - 2; // TODO: adjust those values.
         node.bias += Math.random() - 0.5; // TODO: adjust those values.
-        console.log(node.bias)
       } else {
         node.bias = Math.random() * 2 - 1;
       }
@@ -207,17 +209,17 @@ class Genome {
   }
 
   addNodeMutation() {
-    let r = round(random(0, Object.keys(this.connections).length - 1))
-    let con = this.connections[r];
-    let cin = con.inNode;
-    let inNode = this.nodes[cin];
-    let outNode = this.nodes[con.outNode];
+    const r = round(random(0, Object.keys(this.connections).length - 1))
+    const con = this.connections[r];
+    const cin = con.inNode;
+    const inNode = this.nodes[cin];
+    const outNode = this.nodes[con.outNode];
 
     con.disable();
 
-    let newNode = new Node("HIDDEN", this.nodeCounter.getInnovation());
-    let inToNew = new Connection(inNode.id, newNode.id, 1, true, this.connectionCounter.getInnovation());
-    let newToOut = new Connection(newNode.id, outNode.id, con.weight, true, this.connectionCounter.getInnovation());
+    const newNode = new Node("HIDDEN", this.nodeCounter.getInnovation());
+    const inToNew = new Connection(inNode.id, newNode.id, 1, true, this.connectionCounter.getInnovation());
+    const newToOut = new Connection(newNode.id, outNode.id, con.weight, true, this.connectionCounter.getInnovation());
     this.nodes[newNode.id] = newNode;
     this.connections[inToNew.innovation] = inToNew;
     this.connections[newToOut.innovation] = newToOut;
