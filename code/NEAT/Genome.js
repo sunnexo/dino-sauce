@@ -95,8 +95,9 @@ class Genome {
     for (let nodeID in this.nodes) {
       let node = this.nodes[nodeID];
       if (Math.random() < this.PROBABILITY_PERTURBING) {
-        node.bias *= Math.random() * 4 - 2; // TODO: adjust those values.
-        // node.bias += Math.random() - 0.5; // TODO: adjust those values.
+        // node.bias *= Math.random() * 4 - 2; // TODO: adjust those values.
+        node.bias += Math.random() - 0.5; // TODO: adjust those values.
+        console.log(node.bias)
       } else {
         node.bias = Math.random() * 2 - 1;
       }
@@ -356,12 +357,13 @@ class Genome {
     }
     for (let NodeId in this.nodes) {
       let node = this.nodes[NodeId];
+      push()
       if (node.type == "INPUT") {
         fill(100, 0, 40);
         if (Number.isNaN(node.y)) {
           node.y = height - 50;
         }
-        ellipse(node.x, node.y, 30);
+        ellipse(node.x, node.y, 50);
         fill(0)
         text(node.id, node.x-8, node.y+10);
       } else if (node.type == "OUTPUT") {
@@ -369,7 +371,11 @@ class Genome {
         if (Number.isNaN(node.y)) {
           node.y = 50;
         }
-        ellipse(node.x, node.y, 30);
+        push()
+        node.bias>0 ? stroke(0, 255, 0) : stroke(255, 0, 0)
+        strokeWeight(Math.max(abs(node.bias*4), 0.5))
+        ellipse(node.x, node.y, 50);
+        pop()
         fill(0)
         text(node.id, node.x-8, node.y+10);
       } else {
@@ -377,10 +383,15 @@ class Genome {
         if (Number.isNaN(node.y)) {
           node.y = random(150, height - 150);
         }
-        ellipse(node.x, node.y, 30);
+        push()
+        node.bias>0 ? stroke(0, 255, 0) : stroke(255, 0, 0)
+        strokeWeight(Math.max(abs(node.bias*4), 0.5))
+        ellipse(node.x, node.y, 50);
+        pop()
         fill(0)
         text(node.id, node.x-8, node.y+10);
       }
+      pop()
     }
 
 
