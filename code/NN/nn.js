@@ -1,25 +1,25 @@
 
-class ActivationFunction {
-  constructor(func, dfunc) {
-    this.func = func;
-    this.dfunc = dfunc;
-  }
-}
-
-let sigmoid = new ActivationFunction(
-  x => 1 / (1 + Math.exp(-x)),
-  y => y * (1 - y)
-);
-
-let tanh = new ActivationFunction(
-  x => Math.tanh(x),
-  y => 1 - (y * y)
-);
-
-let relu = new ActivationFunction(
-  x => max(0, x),
-  y => 1 - (y * y)
-);
+// class ActivationFunction {
+//   constructor(func, dfunc) {
+//     this.func = func;
+//     this.dfunc = dfunc;
+//   }
+// }
+//
+// let sigmoid = new ActivationFunction(
+//   x => 1 / (1 + Math.exp(-x)),
+//   y => y * (1 - y)
+// );
+//
+// let tanh = new ActivationFunction(
+//   x => Math.tanh(x),
+//   y => 1 - (y * y)
+// );
+//
+// let relu = new ActivationFunction(
+//   x => max(0, x),
+//   y => 1 - (y * y)
+// );
 
 
 class NeuralNetwork {

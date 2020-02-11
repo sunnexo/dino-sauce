@@ -6,6 +6,8 @@ class Genome {
     this.nodes = {};
     this.nodeCounter = new Counter();
     this.connectionCounter = new Counter();
+    this.feedCounter = 0;
+    this.looped = false;
   }
 
   init(inputs, outputs) {
@@ -46,25 +48,38 @@ class Genome {
     }
     for(let outID in this.nodes){
       if(this.nodes[outID].type == "OUTPUT"){
+        this.feedCounter = 0;
         outputs.push(this.feedNode(outID));
       }
+    }
+    for(let node_id in this.nodes){
+      this.nodes[node_id].reset();
     }
     return outputs;
   }
 
   feedNode(node_id){
+    if(this.nodes[node_id].gotOuput==true){
+      return this.nodes[node_id].getOutput();
+    }
     var val = 0;
     for(let con_id in this.connections){
       let con = this.connections[con_id];
-      if(con.outNode == node_id){
+      if(con.outNode == node_id && con.expressed){
+        this.feedCounter++;
+        if(this.feedCounter>1000){
+          console.log(this.connections);
+          return 0
+        }
         if(this.nodes[con.inNode].type == "INPUT"){
-          val += this.nodes[node_id].feed(con.feed(this.nodes[con.inNode].val));
+          this.nodes[node_id].feed(con.feed(this.nodes[con.inNode].val));
         }else{
-          val += this.nodes[node_id].feed(con.feed(this.feedNode(con.inNode)));
+          this.nodes[node_id].feed(con.feed(this.feedNode(con.inNode)));
         }
       }
     }
-    return val;
+    this.gotOutput = true;
+    return this.nodes[node_id].getOutput();
   }
 
   mutate() {
@@ -88,7 +103,7 @@ class Genome {
     }
   }
 
-  addConectionMutation(maxAttemps = 20) {
+  addConectionMutation(maxAttemps = 100) {
     let tries = 0;
     let success = false;
     while (tries < maxAttemps && success == false) {
@@ -97,13 +112,17 @@ class Genome {
       let node2 = this.nodes[round(random(0, Object.keys(this.nodes).length - 1))];
       let weight = Math.random() * 2 - 1;
 
+      let isOkay = false;
       let reversed = false;
       if (node1.type == "HIDDEN" && node2.type == "INPUT") {
         reversed = true;
+        isOkay = true;
       } else if (node1.type == "OUTPUT" && node2.type == "HIDDEN") {
         reversed = true;
+        isOkay = true;
       } else if (node1.type == "OUTPUT" && node2.type == "INPUT") {
         reversed = true;
+        isOkay = true;
       }
 
       let connectionExists = false;
@@ -131,11 +150,59 @@ class Genome {
 
       let newConnection = new Connection(reversed ? node2.id : node1.id, reversed ? node1.id : node2.id, weight, true, this.connectionCounter.getInnovation());
       this.connections[newConnection.innovation] = newConnection;
+      if(this.checkIfNoLoop() && !isOkay){
+        delete this.connections[this.connectionCounter.dec()];
+        // console.log(Object.assign({}, this.connections), newConnection)
+        continue;
+      }
       success = true;
     }
     if (success == false) {
       console.log("Tried, but could not add more connections");
     }
+  }
+
+
+  checkIfNoLoopFF(node_id, sended_ids=[]){
+    if(node_id in sended_ids || this.looped){
+      this.looped = true;
+      return 0
+    }
+    sended_ids.push(int(node_id));
+    if(this.nodes[node_id].gotOuput==true){
+      return this.nodes[node_id].getOutput();
+    }
+    var val = 0;
+    for(let con_id in this.connections){
+      let con = this.connections[con_id];
+      if(con.outNode == node_id){ //TODO: working on!!!
+        if(this.nodes[con.inNode].type == "INPUT"){
+          this.nodes[node_id].feed(con.feed(this.nodes[con.inNode].val));
+        }else{
+          if(!this.looped){
+            this.nodes[node_id].feed(con.feed(this.checkIfNoLoopFF(con.inNode, sended_ids)));
+          }
+        }
+      }
+    }
+    this.gotOutput = true;
+    return this.nodes[node_id].getOutput();
+  }
+
+  checkIfNoLoop(){
+    this.looped = false;
+    for (let inID in this.nodes) {
+      if (this.nodes[inID].type == "INPUT") {
+        this.nodes[inID].setVal(0);
+      }
+    }
+    for(let outID in this.nodes){
+      if(this.nodes[outID].type == "OUTPUT"){
+        this.feedCounter = 0;
+        this.checkIfNoLoopFF(outID);
+      }
+    }
+    return this.looped;
   }
 
   addNodeMutation() {
@@ -269,33 +336,12 @@ class Genome {
 
   render() {
     background(170);
-    for (let NodeId in this.nodes) {
-      let node = this.nodes[NodeId];
-      if (node.type == "INPUT") {
-        fill(100, 0, 40);
-        if (Number.isNaN(node.y)) {
-          node.y = height - 50;
-        }
-        ellipse(node.x, node.y, 30);
-      } else if (node.type == "OUTPUT") {
-        fill(120, 0, 120);
-        if (Number.isNaN(node.y)) {
-          node.y = 50;
-        }
-        ellipse(node.x, node.y, 30);
-      } else {
-        fill(0, 100, 40);
-        if (Number.isNaN(node.y)) {
-          node.y = random(150, height - 150);
-        }
-        ellipse(node.x, node.y, 30);
-      }
-    }
+    textSize(30)
     for (let NodeId in this.connections) {
       let con = this.connections[NodeId];
       if (con.expressed) {
         push()
-        strokeWeight(abs(con.weight * 4));
+        strokeWeight(Math.max(abs(con.weight * 4), 0.5));
         if (con.weight < 0) {
           stroke(255, 0, 0)
         } else {
@@ -308,6 +354,35 @@ class Genome {
         pop()
       }
     }
+    for (let NodeId in this.nodes) {
+      let node = this.nodes[NodeId];
+      if (node.type == "INPUT") {
+        fill(100, 0, 40);
+        if (Number.isNaN(node.y)) {
+          node.y = height - 50;
+        }
+        ellipse(node.x, node.y, 30);
+        fill(0)
+        text(node.id, node.x-8, node.y+10);
+      } else if (node.type == "OUTPUT") {
+        fill(120, 0, 120);
+        if (Number.isNaN(node.y)) {
+          node.y = 50;
+        }
+        ellipse(node.x, node.y, 30);
+        fill(0)
+        text(node.id, node.x-8, node.y+10);
+      } else {
+        fill(0, 100, 40);
+        if (Number.isNaN(node.y)) {
+          node.y = random(150, height - 150);
+        }
+        ellipse(node.x, node.y, 30);
+        fill(0)
+        text(node.id, node.x-8, node.y+10);
+      }
+    }
+
 
   }
 }

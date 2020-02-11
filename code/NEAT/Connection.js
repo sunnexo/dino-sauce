@@ -26,6 +26,10 @@ class Connection{
   }
 
   feed(val){
-    return val*this.weight;
+    if(this.expressed){
+      return val*this.weight;
+    }else{
+      return 0
+    }
   }
 }

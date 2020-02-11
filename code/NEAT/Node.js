@@ -8,6 +8,7 @@ class Node{
     this.bias = bias;
     this.cameFrom = cameFrom;
     this.val = 0;
+    this.gotOutput = false;
     this.x = random(50, width-50);
     this.xDelta = floor(random(-10, 10));
     this.yDelta = floor(random(-10, 10));
@@ -23,10 +24,39 @@ class Node{
   }
 
   feed(val){
-    return val + this.bias;
+    this.val += val;
+  }
+
+  getOutput(){
+    return sigmoid.func(this.val + this.bias);
   }
 
   reset(){
+    this.gotOutput = false;
     this.val = 0;
   }
 }
+
+
+
+class ActivationFunction {
+  constructor(func, dfunc) {
+    this.func = func;
+    this.dfunc = dfunc;
+  }
+}
+
+let sigmoid = new ActivationFunction(
+  x => 1 / (1 + Math.exp(-x)),
+  y => y * (1 - y)
+);
+
+let tanh = new ActivationFunction(
+  x => Math.tanh(x),
+  y => 1 - (y * y)
+);
+
+let relu = new ActivationFunction(
+  x => max(0, x),
+  y => 1 - (y * y)
+);

@@ -91,4 +91,7 @@ function keyPressed(){
   if(key == "d"){
     console.log("species distance: "+Genome.compatibilityDistance(p1, p2, c1, c2, c3, n_max))
   }
+  if(key == "c"){
+    p1 = Genome.crossover(p1, p2);
+  }
 }
