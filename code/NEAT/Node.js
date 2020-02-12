@@ -2,11 +2,10 @@
 
 
 class Node{
-  constructor(type, id, cameFrom=[], bias=0){
+  constructor(type, id, bias=0){
     this.type = type;
     this.id = id;
     this.bias = bias;
-    this.cameFrom = cameFrom;
     this.val = 0;
     this.gotOutput = false;
     this.x = random(50, width-50);

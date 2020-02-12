@@ -161,7 +161,7 @@ class Genome {
       success = true;
     }
     if (success == false) {
-      console.log("Tried, but could not add more connections");
+      // console.log("Tried, but could not add more connections");
     }
   }
 

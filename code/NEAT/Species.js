@@ -22,4 +22,12 @@ class Species{
     this.members.push(this.mascot)
     this.totalAdjustedFitness = 0;
   }
+
+  copy(){
+    let newSpecies = new Species(this.mascot);
+    newSpecies.members = this.members;
+    newSpecies.totalAdjustedFitness = this.totalAdjustedFitness;
+    newSpecies.fitnessPop = this.fitnessPop;
+    return newSpecies
+  }
 }
