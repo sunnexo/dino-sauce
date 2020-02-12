@@ -49,8 +49,8 @@ class Evaluator {
         if (Genome.compatibilityDistance(g, s.mascot, this.c1, this.c2, this.c3) < this.DT) {
           s.members.push(g);
           this.speciesMap[g] = s;
+          console.log({...this.speciesMap})
           foundSpecies = true;
-          console.log(g)
           break;
         }
       }
@@ -58,6 +58,10 @@ class Evaluator {
         let newSpecies = new Species(g);
         this.species.push(newSpecies);
         this.speciesMap[g] = newSpecies;
+        if(this.species.length > 1){
+          console.log("new species!!! ", newSpecies, this.speciesMap, g, [...this.species])
+          throw new ReferenceError("new species!!! ", newSpecies, this.speciesMap, g, this.species)
+        }
       }
     }
     console.log({"species":[...this.species], "genomes":[...this.genomes], "next gen genomes":[...this.nextGenGenomes]})
