@@ -19,7 +19,7 @@ class Species{
     this.mascot = this.members[newMascotIndex];
     this.members = [];
     this.fitnessPop = [];
-    this.members.push(this.mascot)
+    // this.members.push(this.mascot)
     this.totalAdjustedFitness = 0;
   }
 

@@ -24,10 +24,10 @@ function setup() {
     song.setVolume(0.4);
     song.play();
   }
-  // displayHeight -= 143
-  // displayWidth -= 0
-  displayHeight -= 287
-  displayWidth -= 307
+  displayHeight -= 143
+  displayWidth -= 0
+  // displayHeight -= 287
+  // displayWidth -= 307
   // let w = displayHeight * (397/223);
   // let h = displayWidth * (223/397);
   // if(w<displayWidth){

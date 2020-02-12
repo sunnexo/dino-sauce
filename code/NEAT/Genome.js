@@ -4,7 +4,7 @@
 class Genome {
   constructor() {
     this.PROBABILITY_PERTURBING = 0.9;
-
+    this.id = random();
     this.connections = {};
     this.nodes = {};
     this.nodeCounter = new Counter();
@@ -209,10 +209,9 @@ class Genome {
   }
 
   addNodeMutation() {
-    const r = round(random(0, Object.keys(this.connections).length - 1))
+    const r = round(random(0, Object.keys(this.connections).length-1))
     const con = this.connections[r];
-    const cin = con.inNode;
-    const inNode = this.nodes[cin];
+    const inNode = this.nodes[con.inNode];
     const outNode = this.nodes[con.outNode];
 
     con.disable();
@@ -235,6 +234,7 @@ class Genome {
 
     for (let parent1NodeId in parent1.nodes) {
       child.addNodeGene(parent1.nodes[parent1NodeId].copy());
+      // child.nodeCounter.getInnovation();
     }
 
     for (let parent1NodeId in parent1.connections) {
@@ -242,14 +242,17 @@ class Genome {
         // matching gene
         let childConGene = round(Math.random()) ? parent1.connections[parent1NodeId].copy() : parent2.connections[parent1NodeId].copy();
         child.addConnectionGene(childConGene)
+        // child.nodeCounter.getInnovation();
       } else {
         // disjoint or exess gene
         let childConGene = parent1.connections[parent1NodeId].copy();
         child.addConnectionGene(childConGene);
+        // child.nodeCounter.getInnovation();
       }
     }
-    child.nodeCounter.currentInnovation = parent1.nodeCounter.currentInnovation;
-    child.connectionCounter = new Counter(parent1.connectionCounter.currentInnovation);
+    child.nodeCounter.currentInnovation = Object.keys(child.nodes).length
+    child.connectionCounter.currentInnovation = Object.keys(child.connections).length
+    // console.log(child.nodeCounter.currentInnovation, child.connectionCounter.currentInnovation)
     return child;
   }
 

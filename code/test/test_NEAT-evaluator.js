@@ -6,16 +6,8 @@ let best = NaN;
 
 function setup(){
   createCanvas(600, 570);
-  eval = new Evaluator(10, new Genome().init(2, 1), function(genome){
-    var weightSum = 0;
-    for(let cg in genome.connections){
-      if(genome.connections[cg].expressed){
-        // weightSum += Math.abs(genome.connections[cg].weight);
-        weightSum += 1;
-      }
-    }
-    // return (1000/Math.abs(weightSum-100));
-    return weightSum;
+  eval = new Evaluator(1000, new Genome().init(2, 1), function(genome){
+    return Object.keys(genome.nodes).length+Object.keys(genome.connections).length;
   });
   eval.evaluate();
   console.log("\n\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- "+j+" -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
@@ -33,7 +25,7 @@ function draw(){
 
 function keyPressed(){
   if(key == "e"){
-    for(var i = 0; i < 1; i++){
+    for(var i = 0; i < 10; i++){
       eval.evaluate();
       console.log("\n\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- "+j+" -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
       console.log("highest fitness: "+eval.highestScore);
