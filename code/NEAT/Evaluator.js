@@ -7,8 +7,8 @@ class Evaluator {
     this.c3 = 0;
     this.DT = 3;
     this.MUTATION_RATE = 0.9;
-    this.ADD_CONNECTION_RATE = 0.009;
-    this.ADD_NODE_RATE = 0.003;
+    this.ADD_CONNECTION_RATE = 0.09;
+    this.ADD_NODE_RATE = 0.03;
 
     this.populationSize = populationSize;
 
@@ -94,8 +94,8 @@ class Evaluator {
       let adjustedScore = score / this.speciesMap.get(g).members.length;
 
       s.addAdjustedFitness(adjustedScore);
-      s.fitnessPop.push(new FitnessGenome(g, adjustedScore));
-      this.scoreMap.set(g, adjustedScore);
+      s.fitnessPop.push(new FitnessGenome(g, score));
+      this.scoreMap.set(g, score);
       if (score > this.highestScore) {
         this.highestScore = score;
         this.fittestGenome = g;
@@ -125,26 +125,23 @@ class Evaluator {
       }
       this.nextGenGenomes.push(fittestInSpecies);
     }
-    console.log([...this.species], [...this.nextGenGenomes])
 
-
+    // let getS = [];
     // Breed the rest of the genomes
     while (this.nextGenGenomes.length < this.populationSize) {
       // replace removed genomes by randomly breeding
       let s = this.getRandomSpeciesBiasedAdjustedFitness();
       let p1 = this.getRandomGenomeBiasedAdjustedFitness(s);
       let p2 = this.getRandomGenomeBiasedAdjustedFitness(s);
+      // getS.push([s.copy(), p1.copy(), p2.copy()]);
       if(p1 instanceof FitnessGenome || p2 instanceof FitnessGenome){
         console.log("p1 is instanceof FitnessGenome of p2 is instanceof FitnessGenome", p1, p2)
       }
       let child;
-      if (this.scoreMap.get(p2) >= this.scoreMap.get(p1)) {
+      if (this.scoreMap.get(p2) <= this.scoreMap.get(p1)) {
         child = Genome.crossover(p1, p2);
       } else {
         child = Genome.crossover(p2, p1);
-      }
-      if (Math.random() < this.MUTATION_RATE) {
-        child.mutate();
       }
       if (Math.random() < this.ADD_NODE_RATE) {
         child.addNodeMutation();
@@ -152,15 +149,21 @@ class Evaluator {
       if (Math.random() < this.ADD_CONNECTION_RATE) {
         child.addConectionMutation();
       }
+      if (Math.random() < this.MUTATION_RATE) {
+        child.mutate();
+      }
 
       // console.log(p1.copy(), p2.copy(), child.copy())
       // console.log("child: ", child)
+      // if(child.nodes.size > this.highestScore){
+      //   console.log(child)
+      // }
       if(child === undefined || child === null){
         console.log("oje, er ging iets fout...  ", p1, p2)
       }
       this.nextGenGenomes.push(child);
     }
-
+    // console.log(getS)
 
     this.genomes = [...this.nextGenGenomes];
 
@@ -186,19 +189,21 @@ class Evaluator {
    * total adjusted fitness heve a highter change to reproduce.
    */
   getRandomSpeciesBiasedAdjustedFitness() {
-    let completeWeight = 0;
-    for (let s of this.species) {
-      completeWeight += s.totalAdjustedFitness;
-    }
-    let r = Math.random() * completeWeight;
-    let countWeight = 0;
-    for (let s of this.species) {
-      countWeight += s.totalAdjustedFitness;
-      if (countWeight >= r) {
-        return s;
-      }
-    }
-    throw new RuntimeException("Couldn't find a species...");
+    // let completeWeight = 0;
+    // for (let s of this.species) {
+    //   completeWeight += s.totalAdjustedFitness;
+    // }
+    // let r = Math.random() * completeWeight;
+    // let countWeight = 0;
+    // for (let s of this.species) {
+    //   countWeight += s.totalAdjustedFitness;
+    //   if (countWeight >= r) {
+    //     return s;
+    //   }
+    // }
+    // throw new RuntimeException("Couldn't find a species...");
+    const mapSort1 = this.species.sort((a, b) => b.totalAdjustedFitness - a.totalAdjustedFitness);
+    return mapSort1[Math.floor(random(0,random(0, random(0, mapSort1.length))))];
   }
 
   /**

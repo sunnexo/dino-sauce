@@ -1,13 +1,13 @@
 class Genome {
   constructor() {
-    this.PROBABILITY_PERTURBING = 0.9;
-    this.id = random();
     this.connections = new Map();
     this.nodes = new Map();
     this.nodeCounter = new Counter();
     this.connectionCounter = new Counter();
     this.feedCounter = 0;
     this.looped = false;
+    this.id = random();
+    this.PROBABILITY_PERTURBING = 0.9;
   }
 
   init(inputs, outputs) {
@@ -60,7 +60,7 @@ class Genome {
 
   feedNode(node_id) {
     let node = this.nodes.get(node_id);
-    if (node.gotOutput == true) {
+    if (node.gotOutput) {
       // console.log(node)
       return node.getOutput();
     }
@@ -68,8 +68,9 @@ class Genome {
     for (let [con_id, con] of this.connections) {
       if (con.outNode == node_id && con.expressed) {
         this.feedCounter++;
-        if (this.feedCounter > 300) {
-          console.log(this.connections, this.checkIfNoLoop());
+        if (this.feedCounter > 10000) {
+          console.log(this.connections, this.checkIfNoLoop(), [...this.nodes]);
+          throw new Erro("caldslfkj");
           return 0;
         }
         if (node.type == "INPUT") {
@@ -248,6 +249,7 @@ class Genome {
       child.nodeCounter.currentInnovation = child.nodes.size;
       child.connectionCounter.currentInnovation = child.connections.size;
       if(child.checkIfNoLoop() == false){
+        // console.log(parent1, parent2, child)
         return child;
       }
     }

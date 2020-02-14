@@ -17,9 +17,10 @@ var geneFitnes;
 
 function setup(){
   createCanvas(600, 570);
+
   geneFitnes = new Map();
   best = new Genome().init(2, 1);
-  eval = new Evaluator(1000, 2, 1, function(genome){
+  eval = new Evaluator(150, 2, 1, function(genome){
     // let fitness = 4;
     // for(let i = 0; i<xorOut.length; i++){
     //   // console.log(1/abs(genome.feed(xorIn[i])[0]-xorOut[i]), xorIn[i], xorOut[i], genome.feed(xorIn[i]))
@@ -30,7 +31,7 @@ function setup(){
     // return fitness;
     // return random()
     // return geneFitness.get(genome);
-    return genome.nodes.size+genome.connections.size;
+    return genome.nodes.size;
   });
   for(let gen of eval.genomes){
     geneFitnes.set(gen, 0.0);

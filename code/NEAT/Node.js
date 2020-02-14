@@ -3,11 +3,12 @@
 
 class Node{
   constructor(type, id, bias=0){
+    this.gotOutput = false;
+    this.val = 0;
+
     this.type = type;
     this.id = id;
     this.bias = bias;
-    this.val = 0;
-    this.gotOutput = false;
     this.x = random(50, width-50);
     this.xDelta = floor(random(-10, 10));
     this.yDelta = floor(random(-10, 10));
