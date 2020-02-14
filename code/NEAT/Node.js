@@ -27,7 +27,11 @@ class Node{
   }
 
   getOutput(){
-    return sigmoid.func(this.val + this.bias);
+    if(this.type == "INPUT"){
+      return this.val;
+    }else{
+      return sigmoid.func(this.val + this.bias);
+    }
   }
 
   reset(){
