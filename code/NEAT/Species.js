@@ -15,7 +15,10 @@ class Species{
   }
 
   reset() {
-    let newMascotIndex = floor(Math.random()*(this.members.length));
+    if(this.members.length === 0 || this.fitnessPop.length === 0){
+      console.log("qwertyuioplkjhgfdsazxcvbnm")
+    }
+    let newMascotIndex = floor(Math.random()*(this.members.length-1));
     this.mascot = this.members[newMascotIndex];
     this.members = [];
     this.fitnessPop = [];

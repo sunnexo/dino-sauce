@@ -7,7 +7,7 @@ let best = NaN;
 function setup(){
   createCanvas(600, 570);
   eval = new Evaluator(1000, new Genome().init(2, 1), function(genome){
-    return Object.keys(genome.nodes).length+Object.keys(genome.connections).length;
+    return genome.nodes.size;
   });
   eval.evaluate();
   console.log("\n\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- "+j+" -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
@@ -30,10 +30,11 @@ function keyPressed(){
       console.log("\n\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- "+j+" -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
       console.log("highest fitness: "+eval.highestScore);
       console.log("Amount of species: "+eval.species.length);
-      console.log("highest fitness: "+eval.highestScore);
+      console.log("highest fitness: "+eval.meanScore);
       console.log("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
       best = eval.fittestGenome;
       j++;
     }
+    console.log(eval.species)
   }
 }
