@@ -3,109 +3,56 @@ class AI{
   constructor(){
     this.cactuses = [];
     for(var i = 0; i < floor(width/(width/4)); i++){
+      // new cactuses (obsitcals) based on the width of the screen wil be created.
       this.cactuses.push(new Cactus(width + random(0, width * 2)))
     }
-    this.backupAIs = []
-    this.size = 1000;  // how many AIs are training
+    this.size = 100;  // how many AIs are training
     this.speed = 1; // call update n time before calling render
-    this.ais = []; // an array where all the AIs will be.
-    this.hiddenNodes = 4;
-    // this.NNinputs = width/(width/4)*2+3
-    this.NNinputs = 5
-    for(var i = 0; i < this.size; i++){
-      this.ais.push(new playerBot(new NeuralNetwork(this.NNinputs, this.hiddenNodes, 3), true))
-    }
-    // for(var i = 0; i < this.size; i++){
-    //   this.backupAIs.push(this.ais[i]);
-    // }
-    this.showOne = false;
-    this.showOneIndex = 0;
-    this.howManyToRender = 200;
-    // this.deadAIs = [];
-    this.roundNumber = 0;
-    this.return = false;
-    this.timer = 0;
-    this.countTo = this.roundNumber*30 + 100;
-    this.mutate = 0.05;
-    this.mutateChange = 0.003;
-    this.debug = true;
-    this.bestAILastRound = NaN;
-    this.renderIfDead = true;
-    this.parentsLastRound = 0;
-    this.surviversAis = [];
+
+    this.NEATinput = 5;  // how manny inputs the neat has
+    this.NEAToutput = 3;  // how manny outputs the neat has
+    this.NEAT_Player = new Map(); // an array where all the AIs will be.
+
+    this.evaluator = new Evaluator(this.size, this.NEATinput, this.NEAToutput, function(g){
+      // this function will be called every time the evaluate() function is called.
+      return this.NEAT_Player.get(g).getFitness();  // get the fitness of a connectet player
+    })
+
+    this.historyBestAI = [];  // the history of the best AI of every round.
+    this.howManyToRender = 200; // how manny to draw on the screen.
+    this.iterations = 0;  // how menny round have the AIs died.
+
+    this.return = false; // for UI (user interface).
+    this.debug = true; // show information about the training.
   }
 
+
+  /**
+   * clear all the players and genomes and evvolve the NEAT.
+   * then fill the players and genomes with better genomes and players.
+   */
+  reset(){
+    this.NEAT_Player.clear();
+    this.evaluator.evaluate();
+    for(var i = 0; i < this.size; i++){
+      this.NEAT_Player.set(this.evaluator.genomes[i], new Player(this.evaluator.genomes[i]))
+    }
+  }
+
+  /**
+   * This function is called 60 times per second.
+   * It handles everything that has to do with the AI.
+   */
   update(){
     for(var n = 0; n < this.speed; n++){
-      this.timer++;
-
-      for(var i = 0; i < this.cactuses.length; i++){
-        let cactus = this.cactuses[i]
+      for(let cactus of this.cactuses){
+        // first update all cactuses before the ais.
         cactus.move();
       }
-      for(var i = 0; i < this.ais.length; i++){
-        // if(!this.ais[i].dead){
-          this.ais[i].update(this.cactuses);
-        // }else{
-        //   this.deadAIs.push(this.ais[i].ID)
-        // }
-      }
-      // for(var i = 0; i < this.deadAIs.length; i++){
-      //   for(var j = 0; j < this.ais.length; j++){
-      //     if(this.ais[j].ID == this.deadAIs[i]){
-      //       this.ais.splice(j, j+1)
-      //     }
-      //   }
-      // }
-      // if(this.ais.length < 1){
-      //   for(var i = 0; i < this.deadAIs.length; i++){
-      //     for(var j = 0; j < this.backupAIs.length; j++){
-      //       if(this.backupAIs[j].ID == this.deadAIs[i]){
-      //         this.allDead(this.backupAIs[j])
-      //         break;
-      //       }
-      //     }
-      //   }
-      // }
 
-      if(this.timer > this.countTo){
-        let lowestHitCounter = Infinity;
-        let bestAIs = [];
-        let index;
-        for(var i = 0; i < this.ais.length; i++){
-          let hit;
-          if(this.ais[i].hits == 0){
-            hit = 0;
-          }else{
-            hit = Math.ceil((this.ais[i].hits+1)/10)*10;
-          }
-          if(hit < lowestHitCounter){
-            bestAIs = [];
-            bestAIs.push(this.ais[i]);
-            index = i;
-            lowestHitCounter = hit;
-          }else if(hit == lowestHitCounter){
-            bestAIs.push(this.ais[i]);
-          }
-        }
-        if(bestAIs.length == 1){
-          this.ais.pop(index);
-          let ai;
-          let fitness = Infinity;
-          for(var i = 0; i < this.ais.length; i++){
-            if(this.ais[i].hits < fitness){
-              fitness = this.ais[i].hits;
-              ai = this.ais[i]
-            }
-          }
-          bestAIs.push(ai);
-        }
-        this.parentsLastRound = bestAIs.length;
-        this.timer = 0;
-        this.bestAILastRound = lowestHitCounter/10;
-        this.allDead(bestAIs)
+      for(let [genome, player] of this.NEAT_Player){
+          this.ais[i].update(this.cactuses);
       }
-      // this.deadAIs = []
     }
   }
 
@@ -270,9 +217,6 @@ class playerBot{
   getInputs(cactuses){
     var inputs = []
     inputs.push(map(this.player.yVell, -50, 50, -1, 1))
-    // inputs.push(this.player.isJumping-1)
-    // inputs.push(this.player.dy/height*-0.22)
-    // inputs.push(this.player.dx/width*0.0733333)
     inputs.push(map(this.player.y, 0, height, -1, 0))
     inputs.push(map(this.player.x, 0, width, -1, 1))
     let cactus_s = Infinity;
@@ -288,20 +232,6 @@ class playerBot{
     // console.log(c);
     inputs.push(map(c.x, -width*2, width*2, -1, 1))
     inputs.push(map(c.height, 1, 4, -1, 1))
-
-
-    // let overOne = false;
-    // let index = NaN;
-    // for(var i = 0; i < inputs.length; i++){
-    //   if(inputs[i]>1 | inputs[i]<-1){
-    //     index = i;
-    //     overOne = true;
-    //   }
-    // }
-    // if(overOne){
-    //   console.log(index+" "+inputs[index])
-    // }
-
     return inputs;
   }
 }
