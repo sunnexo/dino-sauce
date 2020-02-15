@@ -61,7 +61,7 @@ class ActivationFunction {
 }
 
 let sigmoid = new ActivationFunction(
-  x => 1 / (1 + Math.exp(-x)),
+  x => 1 / (1 + Math.exp(-4.9*x)),
   y => y * (1 - y)
 );
 

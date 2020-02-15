@@ -24,7 +24,7 @@ function setup() {
     song.setVolume(0.4);
     song.play();
   }
-  displayHeight -= 143
+  displayHeight -= 110
   displayWidth -= 0
   // displayHeight -= 287
   // displayWidth -= 307
@@ -36,6 +36,7 @@ function setup() {
   //   createCanvas(displayHeight * (397/223), h)
   // }
   createCanvas(displayWidth, displayHeight)
+  // createCanvas(1229,578)
   gameState = new AI()
 }
 

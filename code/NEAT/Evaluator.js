@@ -4,10 +4,10 @@ class Evaluator {
 
     this.c1 = 1;
     this.c2 = 1;
-    this.c3 = 1.2;
-    this.DT = 1.5;
-    this.MUTATION_RATE = 0.9;
-    this.ADD_CONNECTION_RATE = 0.086;
+    this.c3 = 3; // or 3
+    this.DT = 3;
+    this.MUTATION_RATE = 0.8;
+    this.ADD_CONNECTION_RATE = 0.3;
     this.ADD_NODE_RATE = 0.03;
 
     this.populationSize = populationSize;
@@ -19,10 +19,12 @@ class Evaluator {
     this.nextGenGenomes = [];
     this.species = [];
 
+    this.highestScoreAllTime = 0;
+    this.fittestGenomeAllTime = new Genome().init(inputs, outputs);
     this.highestScore = 0;
     this.fittestGenome = new Genome().init(inputs, outputs);
     this.meanScore = 0;
-    this.meanHiddenNodes = 0;
+    this.meanHiddenNodes = inputs + outputs;
     this.meanConnections = 0;
 
     for (var i = 0; i < populationSize; i++) {
@@ -40,8 +42,8 @@ class Evaluator {
     this.scoreMap.clear();
     this.speciesMap.clear();
     this.nextGenGenomes = [];
-    // this.highestScore = 0;
-    // this.fittestGenome = NaN;
+    this.highestScore = 0;
+    this.fittestGenome = NaN;
     this.meanScore = 0;
     this.meanHiddenNodes = 0;
     this.meanConnections = 0;
@@ -85,10 +87,8 @@ class Evaluator {
     for(let s of this.species){
       test.push(s.copy())
     }
-    // console.log([...test])
     for (let g of this.genomes) {
       let s = this.speciesMap.get(g);
-      // console.log(s)
       let score = evaluateGenome(g);
       this.meanScore += score;
       let adjustedScore = score / this.speciesMap.get(g).members.length;
@@ -96,6 +96,10 @@ class Evaluator {
       s.addAdjustedFitness(adjustedScore);
       s.fitnessPop.push(new FitnessGenome(g, score));
       this.scoreMap.set(g, score);
+      if (score > this.highestScoreAllTime) {
+        this.highestScoreAllTime = score;
+        this.fittestGenomeAllTime = g;
+      }
       if (score > this.highestScore) {
         this.highestScore = score;
         this.fittestGenome = g;

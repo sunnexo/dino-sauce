@@ -7,7 +7,7 @@ class Genome {
     this.feedCounter = 0;
     this.looped = false;
     this.id = random();
-    this.PROBABILITY_PERTURBING = 0.98;
+    this.PROBABILITY_PERTURBING = 0.9;
     this.fitness = 0;
   }
 
@@ -87,7 +87,7 @@ class Genome {
     for (let [conID, conVal] of this.connections) {
       let con = conVal;
       if (Math.random() < this.PROBABILITY_PERTURBING) {
-        con.weight *= randomGaussian(1, 0.03);
+        con.weight += randomGaussian(0, 0.01);
         // con.weight += Math.random() - 0.5; // TODO: adjust those values.
       } else {
         con.weight = Math.random() * 4 - 2;
@@ -95,7 +95,7 @@ class Genome {
     }
     for (let [nodeID, node] of this.nodes) {
       if (Math.random() < this.PROBABILITY_PERTURBING) {
-        node.bias *= randomGaussian(1, 0.03);
+        node.bias += randomGaussian(0, 0.01);
 
         // node.bias *= Math.random() * 4 - 2; // TODO: adjust those values.
         // node.bias += Math.random() - 0.5; // TODO: adjust those values.
