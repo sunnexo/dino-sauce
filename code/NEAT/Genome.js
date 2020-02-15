@@ -7,7 +7,7 @@ class Genome {
     this.feedCounter = 0;
     this.looped = false;
     this.id = random();
-    this.PROBABILITY_PERTURBING = 0.9;
+    this.PROBABILITY_PERTURBING = 0.98;
   }
 
   init(inputs, outputs) {
@@ -40,18 +40,21 @@ class Genome {
   }
 
   feed(inputs) {
-    let outputs = [];
-    for (let [inID, outNode] of this.nodes) {
-      if (outNode.type == "INPUT") {
-        outNode.setVal(inputs[int(inID)]);
+    var outputs = [];
+    for (let [inID, inNode] of this.nodes) {
+      if (inNode.type == "INPUT") {
+        inNode.setVal(inputs[int(inID)]);
+        inNode.gotOutput = true;
       }
     }
+
     for (let [outID, outNode] of this.nodes) {
       if (outNode.type == "OUTPUT") {
         this.feedCounter = 0;
         outputs.push(this.feedNode(outID));
       }
     }
+
     for (let [node_id, node] of this.nodes) {
       node.reset();
     }
@@ -61,7 +64,7 @@ class Genome {
   feedNode(node_id) {
     let node = this.nodes.get(node_id);
     if (node.gotOutput) {
-      // console.log(node)
+      // console.log(node.copy())
       return node.getOutput();
     }
     var val = 0;
@@ -70,17 +73,12 @@ class Genome {
         this.feedCounter++;
         if (this.feedCounter > 10000) {
           console.log(this.connections, this.checkIfNoLoop(), [...this.nodes]);
-          throw new Erro("caldslfkj");
+          throw new Error("caldslfkj");
           return 0;
         }
-        if (node.type == "INPUT") {
-          node.feed(con.feed(this.nodes.get(con.inNode).val));
-        } else {
-          node.feed(con.feed(this.feedNode(con.inNode)));
-        }
+        node.feed(con.feed(this.feedNode(con.inNode)));
       }
     }
-    node.gotOutput = true;
     return node.getOutput();
   }
 
@@ -88,7 +86,7 @@ class Genome {
     for (let [conID, conVal] of this.connections) {
       let con = conVal;
       if (Math.random() < this.PROBABILITY_PERTURBING) {
-        con.weight *= randomGaussian(1, 0.1);
+        con.weight *= randomGaussian(1, 0.03);
         // con.weight += Math.random() - 0.5; // TODO: adjust those values.
       } else {
         con.weight = Math.random() * 4 - 2;
@@ -96,7 +94,7 @@ class Genome {
     }
     for (let [nodeID, node] of this.nodes) {
       if (Math.random() < this.PROBABILITY_PERTURBING) {
-        node.bias *= randomGaussian(1, 0.1);
+        node.bias *= randomGaussian(1, 0.03);
 
         // node.bias *= Math.random() * 4 - 2; // TODO: adjust those values.
         // node.bias += Math.random() - 0.5; // TODO: adjust those values.
@@ -163,29 +161,28 @@ class Genome {
 
 
   checkIfNoLoopFF(node_id, sended_ids = []) {
-    let node = this.nodes.get(node_id);
-    if (node_id in sended_ids || this.looped) {
-      this.looped = true;
-      return 0
+    // console.log(sended_ids)
+    let sd = [...sended_ids];
+    if(node_id == NaN){
+      return NaN;
     }
-    sended_ids.push(int(node_id));
-    if (node.gotOuput == true) {
+    let node = this.nodes.get(node_id);
+    if (sd.includes(node_id) || this.looped) {
+      // console.log(sd, node_id)
+      this.looped = true;
+      return NaN
+    }
+    sd.push(node_id);
+    // console.log(sd,sended_ids)
+    if (node.gotOutput) {
       return node.getOutput();
     }
     var val = 0;
-    for (let [con_id, con] in this.connections) {
-      // let con = this.connections[con_id];
-      if (con.outNode == node_id) { //TODO: working on!!!
-        if (this.nodes[con.inNode].type == "INPUT") {
-          node.feed(con.feed(this.nodes[con.inNode].val));
-        } else {
-          if (!this.looped) {
-            node.feed(con.feed(this.checkIfNoLoopFF(con.inNode, sended_ids)));
-          }
-        }
+    for (let [con_id, con] of this.connections) {
+      if (con.outNode == node_id) {
+        node.feed(con.feed(this.checkIfNoLoopFF(con.inNode, sd)));
       }
     }
-    this.gotOutput = true;
     return node.getOutput();
   }
 
@@ -194,6 +191,7 @@ class Genome {
     for (let [inID, inNode] of this.nodes) {
       if (inNode.type == "INPUT") {
         inNode.setVal(0);
+        inNode.gotOutput = true;
       }
     }
     for (let [outID, outNode] of this.nodes) {
@@ -201,6 +199,9 @@ class Genome {
         this.feedCounter = 0;
         this.checkIfNoLoopFF(outID);
       }
+    }
+    for (let [node_id, node] of this.nodes) {
+      node.reset();
     }
     return this.looped;
   }
@@ -219,6 +220,7 @@ class Genome {
     this.nodes.set(newNode.id, newNode);
     this.connections.set(inToNew.innovation, inToNew);
     this.connections.set(newToOut.innovation, newToOut);
+
   }
 
 
@@ -248,6 +250,7 @@ class Genome {
       }
       child.nodeCounter.currentInnovation = child.nodes.size;
       child.connectionCounter.currentInnovation = child.connections.size;
+
       if(child.checkIfNoLoop() == false){
         // console.log(parent1, parent2, child)
         return child;
@@ -345,27 +348,6 @@ class Genome {
   render() {
     background(170);
     textSize(30)
-    for (let [conId, con] of this.connections) {
-      if (con.expressed) {
-        push()
-        strokeWeight(Math.max(abs(con.weight * 4), 0.5));
-        if (con.weight < 0) {
-          stroke(255, 0, 0)
-        } else {
-          stroke(0, 255, 0)
-        }
-        let delta = random(-20, 20)
-        try {
-          line(this.nodes.get(con.inNode).x, this.nodes.get(con.inNode).y, this.nodes.get(con.outNode).x + this.nodes.get(con.outNode).xDelta, this.nodes.get(con.outNode).y + this.nodes.get(con.outNode).yDelta)
-        } catch (e) {
-          console.log(e);
-          console.log(this.nodes, con)
-        }
-        strokeWeight(4)
-        point(this.nodes.get(con.outNode).x + this.nodes.get(con.outNode).xDelta, this.nodes.get(con.outNode).y + this.nodes.get(con.outNode).yDelta)
-        pop()
-      }
-    }
     for (let [NodeId, node] of this.nodes) {
       push()
       if (node.type == "INPUT") {
@@ -403,5 +385,30 @@ class Genome {
       }
       pop()
     }
+    for (let [conId, con] of this.connections) {
+      if (con.expressed) {
+        push()
+        strokeWeight(Math.max(abs(con.weight * 4), 1));
+        if (con.weight < 0) {
+          if(con.inNode.y < con.outNode.y){
+            stroke(255, 0, 255)
+          }else{
+            stroke(255, 0, 0)
+          }
+        } else {
+          if(con.inNode.y < con.outNode.y){
+            stroke(0, 255, 255)
+          }else{
+            stroke(0, 255, 0)
+          }
+        }
+        let delta = random(-20, 20)
+        line(this.nodes.get(con.inNode).x, this.nodes.get(con.inNode).y, this.nodes.get(con.outNode).x + this.nodes.get(con.outNode).xDelta, this.nodes.get(con.outNode).y + this.nodes.get(con.outNode).yDelta)
+        strokeWeight(4)
+        point(this.nodes.get(con.outNode).x + this.nodes.get(con.outNode).xDelta, this.nodes.get(con.outNode).y + this.nodes.get(con.outNode).yDelta)
+        pop()
+      }
+    }
   }
+
 }

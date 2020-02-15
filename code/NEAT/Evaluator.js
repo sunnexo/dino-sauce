@@ -2,12 +2,12 @@ class Evaluator {
   constructor(populationSize, inputs, outputs, evaluateGenome) {
     this.evaluateGenome = evaluateGenome; // function for looping over each genom.
 
-    this.c1 = 3;
-    this.c2 = 3;
-    this.c3 = 0;
+    this.c1 = 1;
+    this.c2 = 1;
+    this.c3 = 1;
     this.DT = 3;
     this.MUTATION_RATE = 0.9;
-    this.ADD_CONNECTION_RATE = 0.09;
+    this.ADD_CONNECTION_RATE = 0.026;
     this.ADD_NODE_RATE = 0.03;
 
     this.populationSize = populationSize;
@@ -100,6 +100,10 @@ class Evaluator {
         this.highestScore = score;
         this.fittestGenome = g;
       }
+      if(g.checkIfNoLoop()){
+        console.log(g.copy())
+        throw new Error("grrrr")
+      }
     }
 
     // Put best genomes from each species into next generation
@@ -152,6 +156,10 @@ class Evaluator {
       if (Math.random() < this.MUTATION_RATE) {
         child.mutate();
       }
+      if(child.checkIfNoLoop()){
+        console.log(p1.checkIfNoLoop(), p2.checkIfNoLoop(), child)
+        throw new Error("grrrr")
+      }
 
       // console.log(p1.copy(), p2.copy(), child.copy())
       // console.log("child: ", child)
@@ -176,6 +184,10 @@ class Evaluator {
       if(genome == undefined || genome == null){
         console.log("genome undefind ", new Map(this.speciesMap), [...this.genomes], [...this.species], new Map(this.scoreMap))
         throw new RuntimeException("undefind genome...");
+      }
+      if(genome.checkIfNoLoop()){
+        console.log(genome.copy())
+        throw new Error("grrrr")
       }
     }
     this.meanScore /= this.genomes.length;

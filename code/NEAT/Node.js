@@ -16,7 +16,9 @@ class Node{
   }
 
   copy(){
-    return new Node(this.type, this.id, this.bias);
+    let n = new Node(this.type, this.id, this.bias);
+    n.gotOutput = this.gotOutput;
+    return n;
   }
 
   setVal(val){
@@ -28,10 +30,18 @@ class Node{
   }
 
   getOutput(){
+    this.gotOutput = true;
     if(this.type == "INPUT"){
+      if(this.val == NaN){
+        throw new Error(this)
+      }
       return this.val;
     }else{
-      return sigmoid.func(this.val + this.bias);
+      let out = sigmoid.func(this.val + this.bias);
+      if(out == NaN){
+        throw new Error(this)
+      }
+      return out;
     }
   }
 
