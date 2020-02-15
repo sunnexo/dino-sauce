@@ -4,13 +4,15 @@ class AI{
     this.cactuses = [];
     for(var i = 0; i < floor(width/(width/4)); i++){
       // new cactuses (obsitcals) based on the width of the screen wil be created.
-      this.cactuses.push(new Cactus(width + random(0, width * 2)))
+      // this.cactuses.push(new Cactus(width + random(0, width * 2)))
+      this.cactuses.push(new Cactus(width + i * width/2))
     }
-    this.size = 3000;  // how many AIs are training
+    this.size = 1000;  // how many AIs are training
     this.speed = 1; // call update n time before calling render
 
-    this.NEATinput = 4+2;  // how manny inputs the neat has
-    this.NEAToutput = 3;  // how manny outputs the neat has
+    // this.NEATinput = 4+floor(width/(width/4))*2;  // how manny inputs the neat has
+    this.NEATinput = 9;  // how manny inputs the neat has
+    this.NEAToutput = 2;  // how manny outputs the neat has
     this.NEAT_Player = new Map(); // an array where all the AIs will be.
 
     this.evaluator = new Evaluator(this.size, this.NEATinput, this.NEAToutput)
@@ -22,7 +24,6 @@ class AI{
     this.historyBestAI = [];  // the history of the best AI of every round.
     this.howManyToRender = 150; // how manny to draw on the screen.
     this.iterations = 0;  // how menny round have the AIs died.
-    this.showBestBrain = false;  // if show only the best of last round.
     this.showBest = false;  // if show only the best of last round.
     this.flexSpeed = false;
 
@@ -90,7 +91,8 @@ class AI{
     this.iterations++;
     this.cactuses.length = 0;
     for(var i = 0; i < floor(width/(width/4)); i++){
-      this.cactuses.push(new Cactus(width + random(0, width)))
+      this.cactuses.push(new Cactus(width + (i * width/2) * random(0, 3)))
+      // this.cactuses.push(new Cactus(width + random(0, width)))
     }
     this.reset()
   }
@@ -105,15 +107,21 @@ class AI{
       let cactus = this.cactuses[i]
       cactus.render();
     }
-    if(this.showBestBrain){
+    if(this.debug){
       this.evaluator.fittestGenome.render();
-    }else if(this.showBest){
+    }if(this.showBest){
       this.NEAT_Player.get(this.evaluator.fittestGenome).render()
     }
     else{
-      for(var i = 0; i < this.howManyToRender; i++){
-        var p = this.NEAT_Player.get(this.evaluator.genomes[i])
-        p.render();
+      var j = 0;
+      for(var [genome, player] of this.NEAT_Player){
+        if(j>this.howManyToRender){
+          break;
+        }
+        if(player.dead == false){
+          j++;
+          player.render();
+        }
       }
     }
 
@@ -132,6 +140,7 @@ class AI{
       text("highest fitness: "+     str(this.evaluator.highestScore), 20,     270)
       text("Amount of species: "+   str(this.evaluator.species.length), 20,   300)
       text("mean fitness: "+        str(this.evaluator.meanScore), 20,        330)
+      text("best fitness all time: "+str(this.evaluator.highestScoreAllTime), 20,360)
       pop()
     }
   }
@@ -141,9 +150,6 @@ class AI{
       this.return = new Menu();
     }
     if(key == "b"){ // show best last round
-      this.showBestBrain = !this.showBestBrain;
-    }
-    if(key == "v"){ // show best last round
       this.showBest = !this.showBest;
     }
     if(key == "f"){ // go faster
@@ -159,7 +165,7 @@ class AI{
     if(key == "r"){ // reset speed
       this.speed = 1;
     }
-    if(key == "f"){
+    if(key == "a"){
       this.flexSpeed = !this.flexSpeed;
     }
   }
@@ -181,7 +187,7 @@ class PlayerBot{
         this.player.jump();
       }if(action[1] > 0.5){
         this.player.move(false, true)
-      }if(action[2] > 0.5){
+      }else{
         this.player.move(true, false)
       }
       var hit = false;
@@ -214,18 +220,35 @@ class PlayerBot{
     inputs.push(map(this.player.y, 0, height, -1, 1))
     inputs.push(map(this.player.x, 0, width, -1, 1))
     inputs.push(map(this.player.isJumping, 0, 3, -1, 1))
-    let cactus_s = Infinity;
-    let c = cactuses[0];
-    for(var i = 0; i < cactuses.length; i++){
-      if(cactuses[i].x > this.player.x && cactus_s > cactuses[i].x || c == NaN){
-        cactus_s = cactuses[i].x;
-        c = cactuses[i];
+    inputs.push(map(cactuses[0].speed, 10, 40, -1, 1))
+    cactuses = cactuses.sort((a, b) => a.x - b.x);
+    let c1 = null;
+    let c2 = null;
+    for(let i = 0; i < cactuses.length; i++){
+      if(cactuses[i].x > this.player.x){
+        c1 = cactuses[i];
+        if(i != cactuses.length-1){
+          c2 = cactuses[i+1];
+        }
+        break;
       }
       // inputs.push(map(cactuses[i].x, -width, width * 2, -1, 0))
       // inputs.push(map(cactuses[i].height, 2, 4, -1, 1))
     }
-    inputs.push(map(c.x, -width*2, width*2, -1, 1))
-    inputs.push(map(c.height, 1, 4, -1, 1));
+    if(c1 == null){
+      inputs.push(0);
+      inputs.push(0);
+    }else{
+      inputs.push(map(c1.x, -width, width*2, -1, 1))
+      inputs.push(map(c1.height, 2, 4, -1, 1));
+    }
+    if(c2 === null){
+      inputs.push(0);
+      inputs.push(0);
+    }else{
+      inputs.push(map(c2.x, -width, width*2, -1, 1))
+      inputs.push(map(c2.height, 2, 4, -1, 1));
+    }
     return inputs;
   }
 }

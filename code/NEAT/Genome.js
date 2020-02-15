@@ -6,8 +6,7 @@ class Genome {
     this.connectionCounter = new Counter();
     this.feedCounter = 0;
     this.looped = false;
-    this.id = random();
-    this.PROBABILITY_PERTURBING = 0.9;
+    this.PROBABILITY_PERTURBING = 0.95;
     this.fitness = 0;
   }
 
@@ -20,15 +19,16 @@ class Genome {
       let node = new Node("OUTPUT", this.nodeCounter.getInnovation());
       this.addNodeGene(node);
     }
-    for (let [inID, inNode] of this.nodes) {
-      if (inNode.type == "INPUT") {
-        for (let [outID, outNode] of this.nodes) {
-          if (outNode.type == "OUTPUT") {
-            this.addConnectionGene(new Connection(int(inID), int(outID), Math.random() * 4 - 2, true, this.connectionCounter.getInnovation()))
-          }
-        }
-      }
-    }
+    // for (let [inID, inNode] of this.nodes) {
+    //   if (inNode.type == "INPUT") {
+    //     for (let [outID, outNode] of this.nodes) {
+    //       if (outNode.type == "OUTPUT") {
+    //         this.addConnectionGene(new Connection(int(inID), int(outID), Math.random() * 4 - 2, true, this.connectionCounter.getInnovation()))
+    //       }
+    //     }
+    //   }
+    // }
+    this.addConectionMutation()
     return this;
   }
 
@@ -87,20 +87,20 @@ class Genome {
     for (let [conID, conVal] of this.connections) {
       let con = conVal;
       if (Math.random() < this.PROBABILITY_PERTURBING) {
-        con.weight += randomGaussian(0, 0.01);
+        con.weight += randomGaussian(0, 0.1);
         // con.weight += Math.random() - 0.5; // TODO: adjust those values.
       } else {
-        con.weight = Math.random() * 4 - 2;
+        con.weight = Math.random() * 6 - 3;
       }
     }
     for (let [nodeID, node] of this.nodes) {
       if (Math.random() < this.PROBABILITY_PERTURBING) {
-        node.bias += randomGaussian(0, 0.01);
+        node.bias += randomGaussian(0, 0.1);
 
         // node.bias *= Math.random() * 4 - 2; // TODO: adjust those values.
         // node.bias += Math.random() - 0.5; // TODO: adjust those values.
       } else {
-        node.bias = Math.random() * 4 - 2;
+        node.bias = Math.random() * 6 - 3;
       }
     }
   }
@@ -141,7 +141,7 @@ class Genome {
       let connectionImpossible = false;
       if (node1.type == "INPUT" && node2.type == "INPUT") {
         connectionImpossible = true;
-      } else if (node1.type == "OUTPUT" && node2.type == "OUTPUT") {
+      }else if (node1.type == "OUTPUT" && node2.type == "OUTPUT") {
         connectionImpossible = true;
       } else if (node1.id == node2.id) {
         connectionImpossible = true;
@@ -208,7 +208,10 @@ class Genome {
   }
 
   addNodeMutation() {
-    const r = round(random(0, this.connections.size - 1))
+    if(this.connections.size === 0){
+      return;
+    }
+    const r = floor(random(0, this.connections.size))
     const con = this.connections.get(r);
     const inNode = this.nodes.get(con.inNode);
     const outNode = this.nodes.get(con.outNode);
@@ -261,7 +264,7 @@ class Genome {
   }
 
 
-  static compatibilityDistance(genome1, genome2, c1, c2, c3, n_max = Infinity) {
+  static compatibilityDistance(genome1, genome2, c1, c2, c3, n_max = 20) {
     var excessGenes = 0;
     var disjointGenes = 0;
     var avgWeightDiff = 0;
@@ -294,34 +297,38 @@ class Genome {
       }
     }
 
+    if(genome1.connections.size >= 2 || genome2.connections.size >= 2){
+      const conKeys1 = [...genome1.connections.keys()].sort();
+      const conKeys2 = [...genome2.connections.keys()].sort();
 
-    const conKeys1 = [...genome1.connections.keys()].sort();
-    const conKeys2 = [...genome2.connections.keys()].sort();
+      highestInnovation1 = conKeys1[conKeys1.length - 1];
+      highestInnovation2 = conKeys2[conKeys2.length - 1];
+      indices = Math.max(int(highestInnovation1), int(highestInnovation2));
 
-    highestInnovation1 = conKeys1[conKeys1.length - 1];
-    highestInnovation2 = conKeys2[conKeys2.length - 1];
-    indices = Math.max(int(highestInnovation1), int(highestInnovation2));
-
-    for (var i = 0; i <= indices; i++) {
-      const connection1 = genome1.connections.get(i);
-      const connection2 = genome2.connections.get(i);
-      if (connection1 != undefined) {
-        if (connection2 != undefined) {
-          matchingGenes++;
-          weightDifference += abs(connection1.weight - connection2.weight);
-        } else if (highestInnovation2 < i) {
-          excessGenes++;
-        } else {
-          disjointGenes++;
-        }
-      } else if (connection2 != undefined) {
-        if (highestInnovation1 < i) {
-          excessGenes++;
-        } else {
-          disjointGenes++;
+      for (var i = 0; i <= indices; i++) {
+        const connection1 = genome1.connections.get(i);
+        const connection2 = genome2.connections.get(i);
+        if (connection1 != undefined) {
+          if (connection2 != undefined) {
+            matchingGenes++;
+            weightDifference += abs(connection1.weight - connection2.weight);
+          } else if (highestInnovation2 < i) {
+            excessGenes++;
+          } else {
+            disjointGenes++;
+          }
+        } else if (connection2 != undefined) {
+          if (highestInnovation1 < i) {
+            excessGenes++;
+          } else {
+            disjointGenes++;
+          }
         }
       }
+    }else{
+      return 0
     }
+
 
     avgWeightDiff = weightDifference / matchingGenes;
     var n = max(genome1.nodes.size + genome1.connections.size, genome2.nodes.size + genome2.connections.size);
@@ -347,14 +354,14 @@ class Genome {
 
 
   render() {
-    background(170);
+    // background(170);
     textSize(30)
     for (let [NodeId, node] of this.nodes) {
       push()
       if (node.type == "INPUT") {
         fill(100, 0, 40);
         if (Number.isNaN(node.y)) {
-          node.y = height - 50;
+          node.y = 400;
         }
         ellipse(node.x, node.y, 50);
         fill(0)
@@ -374,7 +381,7 @@ class Genome {
       } else {
         fill(0, 100, 40);
         if (Number.isNaN(node.y)) {
-          node.y = random(150, height - 150);
+          node.y = random(80, 260);
         }
         push()
         node.bias > 0 ? stroke(0, 255, 0) : stroke(255, 0, 0)

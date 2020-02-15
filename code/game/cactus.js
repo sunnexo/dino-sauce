@@ -17,12 +17,13 @@ class Cactus {
     this.dx = width * 0.0333333333;
   }
   move() {
-    if (this.x > -400) {
+    if (this.x > -width) {
       this.x -= this.speed;
     } else {
       this.resets++;
       this.canGivePoints = true;
-      this.x = width + random(0 + this.speed * 10, 400 + this.speed * 10 + width / 4);
+      this.x = width + width*random(0, 1);
+      // this.x = width + random(0 + this.speed * 10, 400 + this.speed * 10 + width / 4);
       this.height = round(random(2, 4)); //random(-200, -50);
       this.dy = map(this.height, 2, 4, height * -0.15, height * -0.3);
       if (this.height === 2) {

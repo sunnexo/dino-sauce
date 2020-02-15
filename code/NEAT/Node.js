@@ -9,7 +9,7 @@ class Node{
     this.type = type;
     this.id = id;
     this.bias = bias;
-    this.x = random(50, width-50);
+    this.x = random(width-500, width-50);
     this.xDelta = floor(random(-10, 10));
     this.yDelta = floor(random(-10, 10));
     this.y = NaN;
