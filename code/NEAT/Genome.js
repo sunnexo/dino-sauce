@@ -8,6 +8,7 @@ class Genome {
     this.looped = false;
     this.id = random();
     this.PROBABILITY_PERTURBING = 0.98;
+    this.fitness = 0;
   }
 
   init(inputs, outputs) {

@@ -36,7 +36,7 @@ function setup() {
   //   createCanvas(displayHeight * (397/223), h)
   // }
   createCanvas(displayWidth, displayHeight)
-  gameState = new Menu()
+  gameState = new AI()
 }
 
 

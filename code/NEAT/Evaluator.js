@@ -1,13 +1,13 @@
 class Evaluator {
-  constructor(populationSize, inputs, outputs, evaluateGenome) {
-    this.evaluateGenome = evaluateGenome; // function for looping over each genom.
+  constructor(populationSize, inputs, outputs) {
+    // this.evaluateGenome = evaluateGenome; // function for looping over each genom.
 
     this.c1 = 1;
     this.c2 = 1;
-    this.c3 = 1;
-    this.DT = 3;
+    this.c3 = 1.2;
+    this.DT = 1.5;
     this.MUTATION_RATE = 0.9;
-    this.ADD_CONNECTION_RATE = 0.026;
+    this.ADD_CONNECTION_RATE = 0.086;
     this.ADD_NODE_RATE = 0.03;
 
     this.populationSize = populationSize;
@@ -32,7 +32,7 @@ class Evaluator {
   }
 
 
-  evaluate() {
+  evaluate(evaluateGenome) {
     // Reset everything for next generation
     for (let s of this.species) {
       s.reset();
@@ -89,7 +89,7 @@ class Evaluator {
     for (let g of this.genomes) {
       let s = this.speciesMap.get(g);
       // console.log(s)
-      let score = this.evaluateGenome(g);
+      let score = evaluateGenome(g);
       this.meanScore += score;
       let adjustedScore = score / this.speciesMap.get(g).members.length;
 
@@ -114,7 +114,7 @@ class Evaluator {
     // console.log([...test])
 
     for (let s of this.species) {
-      let fittestInSpecies = s.fitnessPop[0];
+      let fittestInSpecies = s.fitnessPop[0].genome;
       if(fittestInSpecies === undefined || fittestInSpecies === null){
         console.log("fittestInSpecies is undefined: ", fittestInSpecies, [...s.fitnessPop], s, [...this.species])
       }
@@ -126,6 +126,9 @@ class Evaluator {
           fittestInSpecies = fp.genome;
           check = true;
         }
+      }
+      if(fittestInSpecies instanceof FitnessGenome){
+        console.error("help",fittestInSpecies, )
       }
       this.nextGenGenomes.push(fittestInSpecies);
     }
@@ -166,7 +169,7 @@ class Evaluator {
       // if(child.nodes.size > this.highestScore){
       //   console.log(child)
       // }
-      if(child === undefined || child === null){
+      if(child === undefined || child === null || child instanceof FitnessGenome){
         console.log("oje, er ging iets fout...  ", p1, p2)
       }
       this.nextGenGenomes.push(child);
