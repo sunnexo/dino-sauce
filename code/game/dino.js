@@ -72,7 +72,10 @@ class Dino{
 
   jump(){
     if(this.isBot){
-      if(this.y >= Game.ground() || this.isJumping < 1){
+      if(this.y >= Game.ground()){
+        this.isJumping = 0;
+      }
+      if(this.isJumping < 2){
         this.isJumping++;
         this.yVell = -35;
         if(!this.isBot){
