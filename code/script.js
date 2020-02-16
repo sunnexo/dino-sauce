@@ -1,5 +1,6 @@
 let gameState;
 let sound = false;
+var canvas;
 
 function preload() {
   if (sound) {
@@ -34,7 +35,7 @@ function setup() {
   // }else{
   //   createCanvas(displayHeight * (397/223), h)
   // }
-  createCanvas(displayWidth, displayHeight);
+  canvas = createCanvas(window.innerWidth, window.innerHeight);
   // createCanvas(1229,578)
   gameState = new Menu();
 }
@@ -50,3 +51,11 @@ function draw() {
 function keyPressed() {
   gameState.keyHandeler(key);
 }
+
+window.onresize = function() {
+  var w = window.innerWidth;
+  var h = window.innerHeight;
+  canvas.size(w, h);
+  width = w;
+  height = h;
+};
