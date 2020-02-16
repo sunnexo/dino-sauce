@@ -2,12 +2,13 @@ class Evaluator {
   constructor(populationSize, inputs, outputs) {
     // this.evaluateGenome = evaluateGenome; // function for looping over each genom.
 
-    this.c1 = 1;
-    this.c2 = 1;
+    this.c1 = 2.8;
+    this.c2 = 2.5;
     this.c3 = 3; // or 3
-    this.DT = 3;
-    this.MUTATION_RATE = 0.8;
-    this.ADD_CONNECTION_RATE = 0.14;
+    this.DT = 2.4;
+    this.MUTATION_RATE = 0.55;
+    this.ADD_CONNECTION_RATE = 0.07;
+    this.DISABLE_CONNECTION_RATE = 0.03;
     this.ADD_NODE_RATE = 0.03;
 
     this.populationSize = populationSize;
@@ -28,11 +29,10 @@ class Evaluator {
     this.meanConnections = 0;
 
     for (var i = 0; i < populationSize; i++) {
-      this.genomes.push(new Genome().init(inputs, outputs))
+      this.genomes.push(new Genome().init(inputs, outputs));
     }
     // console.log(this.genomes[0])
   }
-
 
   evaluate(evaluateGenome) {
     // Reset everything for next generation
@@ -48,17 +48,19 @@ class Evaluator {
     this.meanHiddenNodes = 0;
     this.meanConnections = 0;
 
-
     // Place genomes into species
     for (let g of this.genomes) {
       this.meanHiddenNodes += g.nodes.size;
       this.meanConnections += g.connections.size;
       var foundSpecies = false;
       for (let s of this.species) {
-        if(g.nodes == undefined || s.mascot.nodes == undefined){
-          console.log("g or mascot is undefined", g, s.mascot)
+        if (g.nodes == undefined || s.mascot.nodes == undefined) {
+          console.log("g or mascot is undefined", g, s.mascot);
         }
-        if (Genome.compatibilityDistance(g, s.mascot, this.c1, this.c2, this.c3) < this.DT) {
+        if (
+          Genome.compatibilityDistance(g, s.mascot, this.c1, this.c2, this.c3) <
+          this.DT
+        ) {
           s.members.push(g);
           this.speciesMap.set(g, s);
           foundSpecies = true;
@@ -73,9 +75,11 @@ class Evaluator {
     }
 
     // Remove unused species
-    var rem = false
-    for (let i = this.species.length-1; i > -1; i--) { // TODO: check if correct
-      if (this.species[i].members.length === 0) {  // hire is the problem TODO: TODO:
+    var rem = false;
+    for (let i = this.species.length - 1; i > -1; i--) {
+      // TODO: check if correct
+      if (this.species[i].members.length === 0) {
+        // hire is the problem TODO: TODO:
         // this.speciesMap.set(g);
         // console.log(i, this.species[i].copy())
         this.species.splice(i, 1);
@@ -84,8 +88,8 @@ class Evaluator {
 
     // Evaluate genomes and assign fitness
     let test = [];
-    for(let s of this.species){
-      test.push(s.copy())
+    for (let s of this.species) {
+      test.push(s.copy());
     }
     for (let g of this.genomes) {
       let s = this.speciesMap.get(g);
@@ -104,23 +108,29 @@ class Evaluator {
         this.highestScore = score;
         this.fittestGenome = g;
       }
-      if(g.checkIfNoLoop()){
-        console.log(g.copy())
-        throw new Error("grrrr")
+      if (g.checkIfNoLoop()) {
+        console.log(g.copy());
+        throw new Error("grrrr");
       }
     }
 
     // Put best genomes from each species into next generation
     test = [];
-    for(let s of this.species){
-      test.push(s.copy())
+    for (let s of this.species) {
+      test.push(s.copy());
     }
     // console.log([...test])
 
     for (let s of this.species) {
       let fittestInSpecies = s.fitnessPop[0].genome;
-      if(fittestInSpecies === undefined || fittestInSpecies === null){
-        console.log("fittestInSpecies is undefined: ", fittestInSpecies, [...s.fitnessPop], s, [...this.species])
+      if (fittestInSpecies === undefined || fittestInSpecies === null) {
+        console.log(
+          "fittestInSpecies is undefined: ",
+          fittestInSpecies,
+          [...s.fitnessPop],
+          s,
+          [...this.species]
+        );
       }
       let highestFitnessScore = 0;
       let check = false;
@@ -131,8 +141,8 @@ class Evaluator {
           check = true;
         }
       }
-      if(fittestInSpecies instanceof FitnessGenome){
-        console.error("help",fittestInSpecies, )
+      if (fittestInSpecies instanceof FitnessGenome) {
+        console.error("help", fittestInSpecies);
       }
       this.nextGenGenomes.push(fittestInSpecies);
     }
@@ -145,8 +155,12 @@ class Evaluator {
       let p1 = this.getRandomGenomeBiasedAdjustedFitness(s);
       let p2 = this.getRandomGenomeBiasedAdjustedFitness(s);
       // getS.push([s.copy(), p1.copy(), p2.copy()]);
-      if(p1 instanceof FitnessGenome || p2 instanceof FitnessGenome){
-        console.log("p1 is instanceof FitnessGenome of p2 is instanceof FitnessGenome", p1, p2)
+      if (p1 instanceof FitnessGenome || p2 instanceof FitnessGenome) {
+        console.log(
+          "p1 is instanceof FitnessGenome of p2 is instanceof FitnessGenome",
+          p1,
+          p2
+        );
       }
       let child;
       if (this.scoreMap.get(p2) <= this.scoreMap.get(p1)) {
@@ -163,9 +177,12 @@ class Evaluator {
       if (Math.random() < this.MUTATION_RATE) {
         child.mutate();
       }
-      if(child.checkIfNoLoop()){
-        console.log(p1.checkIfNoLoop(), p2.checkIfNoLoop(), child)
-        throw new Error("grrrr")
+      if (Math.random() < this.DISABLE_CONNECTION_RATE) {
+        child.disableConectionMutation();
+      }
+      if (child.checkIfNoLoop()) {
+        console.log(p1.checkIfNoLoop(), p2.checkIfNoLoop(), child);
+        throw new Error("grrrr");
       }
 
       // console.log(p1.copy(), p2.copy(), child.copy())
@@ -173,8 +190,12 @@ class Evaluator {
       // if(child.nodes.size > this.highestScore){
       //   console.log(child)
       // }
-      if(child === undefined || child === null || child instanceof FitnessGenome){
-        console.log("oje, er ging iets fout...  ", p1, p2)
+      if (
+        child === undefined ||
+        child === null ||
+        child instanceof FitnessGenome
+      ) {
+        console.log("oje, er ging iets fout...  ", p1, p2);
       }
       this.nextGenGenomes.push(child);
     }
@@ -184,24 +205,29 @@ class Evaluator {
 
     this.nextGenGenomes = [];
 
-    for(let genome of this.genomes){
-      if(genome instanceof FitnessGenome){
-        console.log("genome is instanceof FitnessGenome", genome)
+    for (let genome of this.genomes) {
+      if (genome instanceof FitnessGenome) {
+        console.log("genome is instanceof FitnessGenome", genome);
       }
-      if(genome == undefined || genome == null){
-        console.log("genome undefind ", new Map(this.speciesMap), [...this.genomes], [...this.species], new Map(this.scoreMap))
+      if (genome == undefined || genome == null) {
+        console.log(
+          "genome undefind ",
+          new Map(this.speciesMap),
+          [...this.genomes],
+          [...this.species],
+          new Map(this.scoreMap)
+        );
         throw new RuntimeException("undefind genome...");
       }
-      if(genome.checkIfNoLoop()){
-        console.log(genome.copy())
-        throw new Error("grrrr")
+      if (genome.checkIfNoLoop()) {
+        console.log(genome.copy());
+        throw new Error("grrrr");
       }
     }
     this.meanScore /= this.genomes.length;
     this.meanHiddenNodes /= this.genomes.length;
     this.meanConnections /= this.genomes.length;
   }
-
 
   /**
    * Selects a random species from the species list, where species with a higher
@@ -221,8 +247,12 @@ class Evaluator {
     //   }
     // }
     // throw new RuntimeException("Couldn't find a species...");
-    const mapSort1 = this.species.sort((a, b) => b.totalAdjustedFitness - a.totalAdjustedFitness);
-    return mapSort1[Math.floor(random(0,random(0, random(0, mapSort1.length))))];
+    const mapSort1 = this.species.sort(
+      (a, b) => b.totalAdjustedFitness - a.totalAdjustedFitness
+    );
+    return mapSort1[
+      Math.floor(random(0, random(0, random(0, random(0, mapSort1.length)))))
+    ];
   }
 
   /**
