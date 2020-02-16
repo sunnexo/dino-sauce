@@ -6,10 +6,10 @@ class Evaluator {
     this.c2 = 2.5;
     this.c3 = 3; // or 3
     this.DT = 2.4;
-    this.MUTATION_RATE = 0.55;
-    this.ADD_CONNECTION_RATE = 0.07;
-    this.DISABLE_CONNECTION_RATE = 0.03;
-    this.ADD_NODE_RATE = 0.03;
+    this.MUTATION_RATE = 0.62;
+    this.ADD_CONNECTION_RATE = 0.073;
+    this.DISABLE_CONNECTION_RATE = 0.0342;
+    this.ADD_NODE_RATE = 0.031;
 
     this.populationSize = populationSize;
 
