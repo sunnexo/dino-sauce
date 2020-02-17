@@ -61,7 +61,7 @@ class Cactus {
   }
 
   collision(dino, justReturn = false) {
-    if (this.speed < 99) {
+    if (this.speed < 13) {
       this.speed = dino.score / 10 + width * 0.0083333333;
     }
     if (

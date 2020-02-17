@@ -6,7 +6,7 @@ class Genome {
     this.connectionCounter = new Counter();
     this.feedCounter = 0;
     this.looped = false;
-    this.PROBABILITY_PERTURBING = 0.995;
+    this.PROBABILITY_PERTURBING = 0.9;
     this.fitness = 0;
   }
 
@@ -83,7 +83,7 @@ class Genome {
     return node.getOutput();
   }
 
-  mutate(prob = 0.042) {
+  mutate(prob = 0.01) {
     for (let [conID, conVal] of this.connections) {
       let con = conVal;
       if (Math.random() < this.PROBABILITY_PERTURBING) {
