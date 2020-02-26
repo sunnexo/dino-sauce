@@ -6,7 +6,7 @@ class AI {
       // this.cactuses.push(new Cactus(width + random(0, width * 2)))
       this.cactuses.push(new Cactus(width + (i * width) / 2.5));
     }
-    this.size = 3000; // how many AIs are training
+    this.size = 400; // how many AIs are training
     this.speed = 1; // call update n time before calling render
 
     // this.NEATinput = 4+floor(width/(width/4))*2;  // how manny inputs the neat has
