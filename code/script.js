@@ -1,5 +1,5 @@
 let gameState;
-let sound = false;
+let sound = true;
 var canvas;
 
 function preload() {
@@ -16,6 +16,11 @@ function preload() {
   iEnemy3 = loadImage("graphic/enemy3.png");
   iEnemy4 = loadImage("graphic/enemy4.png");
   megaman_bg = loadImage("graphic/megaman-bg.png");
+  iPlayerRun = [
+    loadImage("graphic/walk1.png"),
+    loadImage("graphic/walk2.png"),
+    loadImage("graphic/walk3.png")
+  ]
 }
 
 function setup() {
