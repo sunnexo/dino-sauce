@@ -6,7 +6,7 @@ class AI {
       // this.cactuses.push(new Cactus(width + random(0, width * 2)))
       this.cactuses.push(new Cactus(width + (i * width) / 2.5));
     }
-    this.size = 900; // how many AIs are training
+    this.size = 3000; // how many AIs are training
     this.speed = 1; // call update n time before calling render
 
     // this.NEATinput = 4+floor(width/(width/4))*2;  // how manny inputs the neat has
@@ -174,9 +174,9 @@ class AI {
       text("How many AIs: " + str(this.size), 20, 120);
       text(
         "mean hidden nodes: " +
-          str(
-            this.evaluator.meanHiddenNodes - (this.NEATinput + this.NEAToutput)
-          ),
+        str(
+          this.evaluator.meanHiddenNodes - (this.NEATinput + this.NEAToutput)
+        ),
         20,
         150
       );
@@ -195,8 +195,8 @@ class AI {
       text("current score: " + str(this.currentScore), 20, 420);
       text(
         "how many deadth: " +
-          str(round((this.deadth / this.NEAT_Player.size) * 100)) +
-          "%",
+        str(round((this.deadth / this.NEAT_Player.size) * 100)) +
+        "%",
         20,
         450
       );
