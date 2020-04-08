@@ -142,6 +142,11 @@ class AI {
 
   render() {
     background(megaman_bg);
+    push()
+    fill(0);
+    text("SPEED: s=slower  f=faster  a=auto  r=reset", 15, height - 20);
+    text("d=togle debug  b=show best  m=menu/home", width / 10 * 6, height - 20)
+    pop()
     for (var i = 0; i < this.cactuses.length; i++) {
       let cactus = this.cactuses[i];
       cactus.render();

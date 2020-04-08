@@ -40,7 +40,7 @@ class Dino {
         }
       }
     }
-    if (this.y > Game.ground()) {
+    if (this.y >= Game.ground()) {
       this.isJumping = 0;
     }
     if (this.y >= Game.ground()) {

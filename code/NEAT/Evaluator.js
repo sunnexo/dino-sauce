@@ -2,7 +2,7 @@ class Evaluator {
   constructor(populationSize, inputs, outputs) {
     // this.evaluateGenome = evaluateGenome; // function for looping over each genom.
 
-    this.c1 = 2.8;
+    this.c1 = 2.4;
     this.c2 = 2.5;
     this.c3 = 3; // or 3
     this.DT = 2.4;
