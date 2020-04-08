@@ -1,8 +1,8 @@
+//test
 
 
-
-class Species{
-  constructor(mascot){
+class Species {
+  constructor(mascot) {
     this.mascot = mascot;
     this.members = [];
     this.members.push(mascot);
@@ -15,10 +15,10 @@ class Species{
   }
 
   reset() {
-    if(this.members.length === 0 || this.fitnessPop.length === 0){
+    if (this.members.length === 0 || this.fitnessPop.length === 0) {
       console.log("qwertyuioplkjhgfdsazxcvbnm")
     }
-    let newMascotIndex = floor(Math.random()*(this.members.length-1));
+    let newMascotIndex = floor(Math.random() * (this.members.length - 1));
     this.mascot = this.members[newMascotIndex];
     this.members = [];
     this.fitnessPop = [];
@@ -26,7 +26,7 @@ class Species{
     this.totalAdjustedFitness = 0;
   }
 
-  copy(){
+  copy() {
     let newSpecies = new Species(this.mascot);
     newSpecies.members = this.members;
     newSpecies.totalAdjustedFitness = this.totalAdjustedFitness;
